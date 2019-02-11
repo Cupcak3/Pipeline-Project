@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		70956BE0221228C500960036 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70956BDF221228C500960036 /* main.cpp */; };
+		70956C272212296A00960036 /* driver_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70956BEA2212296100960036 /* driver_state.cpp */; };
+		70956C282212296A00960036 /* dump_png.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70956BFA2212296200960036 /* dump_png.cpp */; };
+		70956C292212296A00960036 /* shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70956C0B2212296400960036 /* shaders.cpp */; };
+		70956C2A2212296A00960036 /* parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70956C132212296800960036 /* parse.cpp */; };
+		70956C2D22122A0D00960036 /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70956C2C22122A0D00960036 /* libpng15.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +30,72 @@
 /* Begin PBXFileReference section */
 		70956BDC221228C500960036 /* Pipeline Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Pipeline Project"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70956BDF221228C500960036 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		70956BE62212296100960036 /* 18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 18.png; sourceTree = "<group>"; };
+		70956BE72212296100960036 /* grading-script.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "grading-script.py"; sourceTree = "<group>"; };
+		70956BE82212296100960036 /* 19.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 19.txt; sourceTree = "<group>"; };
+		70956BE92212296100960036 /* 16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 16.png; sourceTree = "<group>"; };
+		70956BEA2212296100960036 /* driver_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = driver_state.cpp; sourceTree = "<group>"; };
+		70956BEB2212296100960036 /* 07.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 07.png; sourceTree = "<group>"; };
+		70956BEC2212296100960036 /* 04.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 04.txt; sourceTree = "<group>"; };
+		70956BED2212296100960036 /* 03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 03.png; sourceTree = "<group>"; };
+		70956BEE2212296100960036 /* 22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 22.png; sourceTree = "<group>"; };
+		70956BEF2212296100960036 /* 08.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 08.png; sourceTree = "<group>"; };
+		70956BF02212296100960036 /* 24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 24.png; sourceTree = "<group>"; };
+		70956BF12212296100960036 /* 10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 10.png; sourceTree = "<group>"; };
+		70956BF22212296100960036 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		70956BF32212296100960036 /* 13.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 13.txt; sourceTree = "<group>"; };
+		70956BF42212296100960036 /* 24.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 24.txt; sourceTree = "<group>"; };
+		70956BF52212296200960036 /* mat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat.h; sourceTree = "<group>"; };
+		70956BF62212296200960036 /* SConstruct */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SConstruct; sourceTree = "<group>"; };
+		70956BF72212296200960036 /* 14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 14.png; sourceTree = "<group>"; };
+		70956BF82212296200960036 /* 10.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 10.txt; sourceTree = "<group>"; };
+		70956BF92212296200960036 /* 01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 01.png; sourceTree = "<group>"; };
+		70956BFA2212296200960036 /* dump_png.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dump_png.cpp; sourceTree = "<group>"; };
+		70956BFB2212296200960036 /* 06.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 06.txt; sourceTree = "<group>"; };
+		70956BFC2212296200960036 /* 01.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 01.txt; sourceTree = "<group>"; };
+		70956BFD2212296200960036 /* 04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 04.png; sourceTree = "<group>"; };
+		70956BFE2212296200960036 /* 21.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 21.png; sourceTree = "<group>"; };
+		70956BFF2212296200960036 /* 16.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 16.txt; sourceTree = "<group>"; };
+		70956C002212296200960036 /* 23.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 23.txt; sourceTree = "<group>"; };
+		70956C012212296200960036 /* driver_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = driver_state.h; sourceTree = "<group>"; };
+		70956C022212296300960036 /* 11.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 11.txt; sourceTree = "<group>"; };
+		70956C032212296300960036 /* 00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 00.png; sourceTree = "<group>"; };
+		70956C042212296300960036 /* 02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 02.png; sourceTree = "<group>"; };
+		70956C052212296300960036 /* shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shaders.h; sourceTree = "<group>"; };
+		70956C062212296300960036 /* 17.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 17.txt; sourceTree = "<group>"; };
+		70956C072212296300960036 /* 12.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 12.txt; sourceTree = "<group>"; };
+		70956C082212296300960036 /* 07.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 07.txt; sourceTree = "<group>"; };
+		70956C092212296300960036 /* 05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 05.png; sourceTree = "<group>"; };
+		70956C0A2212296300960036 /* 12.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 12.png; sourceTree = "<group>"; };
+		70956C0B2212296400960036 /* shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shaders.cpp; sourceTree = "<group>"; };
+		70956C0C2212296400960036 /* 09.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 09.txt; sourceTree = "<group>"; };
+		70956C0D2212296400960036 /* 22.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 22.txt; sourceTree = "<group>"; };
+		70956C0E2212296400960036 /* 21.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 21.txt; sourceTree = "<group>"; };
+		70956C0F2212296400960036 /* 03.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 03.txt; sourceTree = "<group>"; };
+		70956C102212296400960036 /* 25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 25.png; sourceTree = "<group>"; };
+		70956C112212296400960036 /* 17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 17.png; sourceTree = "<group>"; };
+		70956C122212296400960036 /* 02.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 02.txt; sourceTree = "<group>"; };
+		70956C132212296800960036 /* parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parse.cpp; sourceTree = "<group>"; };
+		70956C142212296800960036 /* 09.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 09.png; sourceTree = "<group>"; };
+		70956C152212296800960036 /* 23.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 23.png; sourceTree = "<group>"; };
+		70956C162212296800960036 /* 05.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 05.txt; sourceTree = "<group>"; };
+		70956C172212296800960036 /* 13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 13.png; sourceTree = "<group>"; };
+		70956C182212296800960036 /* 15.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 15.txt; sourceTree = "<group>"; };
+		70956C192212296800960036 /* 19.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 19.png; sourceTree = "<group>"; };
+		70956C1A2212296800960036 /* 18.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 18.txt; sourceTree = "<group>"; };
+		70956C1B2212296900960036 /* 20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 20.png; sourceTree = "<group>"; };
+		70956C1C2212296900960036 /* vec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec.h; sourceTree = "<group>"; };
+		70956C1D2212296900960036 /* 15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 15.png; sourceTree = "<group>"; };
+		70956C1E2212296900960036 /* 08.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 08.txt; sourceTree = "<group>"; };
+		70956C1F2212296900960036 /* 14.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 14.txt; sourceTree = "<group>"; };
+		70956C202212296900960036 /* 25.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 25.txt; sourceTree = "<group>"; };
+		70956C212212296900960036 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		70956C222212296900960036 /* 06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 06.png; sourceTree = "<group>"; };
+		70956C232212296A00960036 /* 20.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20.txt; sourceTree = "<group>"; };
+		70956C242212296A00960036 /* 11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 11.png; sourceTree = "<group>"; };
+		70956C252212296A00960036 /* grading-scheme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "grading-scheme.txt"; sourceTree = "<group>"; };
+		70956C262212296A00960036 /* 00.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 00.txt; sourceTree = "<group>"; };
+		70956C2C22122A0D00960036 /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng15.framework; path = ../../../../../../../Library/Frameworks/libpng15.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70956C2D22122A0D00960036 /* libpng15.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +115,7 @@
 			children = (
 				70956BDE221228C500960036 /* Pipeline Project */,
 				70956BDD221228C500960036 /* Products */,
+				70956C2B22122A0D00960036 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,9 +130,98 @@
 		70956BDE221228C500960036 /* Pipeline Project */ = {
 			isa = PBXGroup;
 			children = (
+				70956C3222122BD000960036 /* inputs */,
+				70956C3122122BAD00960036 /* outputs */,
+				70956BF62212296200960036 /* SConstruct */,
+				70956BEA2212296100960036 /* driver_state.cpp */,
+				70956BFA2212296200960036 /* dump_png.cpp */,
 				70956BDF221228C500960036 /* main.cpp */,
+				70956C132212296800960036 /* parse.cpp */,
+				70956C0B2212296400960036 /* shaders.cpp */,
+				70956C212212296900960036 /* common.h */,
+				70956C012212296200960036 /* driver_state.h */,
+				70956BF52212296200960036 /* mat.h */,
+				70956C052212296300960036 /* shaders.h */,
+				70956C1C2212296900960036 /* vec.h */,
+				70956BE72212296100960036 /* grading-script.py */,
+				70956BF22212296100960036 /* CMakeLists.txt */,
+				70956C252212296A00960036 /* grading-scheme.txt */,
 			);
 			path = "Pipeline Project";
+			sourceTree = "<group>";
+		};
+		70956C2B22122A0D00960036 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				70956C2C22122A0D00960036 /* libpng15.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		70956C3122122BAD00960036 /* outputs */ = {
+			isa = PBXGroup;
+			children = (
+				70956C032212296300960036 /* 00.png */,
+				70956BF92212296200960036 /* 01.png */,
+				70956C042212296300960036 /* 02.png */,
+				70956BED2212296100960036 /* 03.png */,
+				70956BFD2212296200960036 /* 04.png */,
+				70956C092212296300960036 /* 05.png */,
+				70956C222212296900960036 /* 06.png */,
+				70956BEB2212296100960036 /* 07.png */,
+				70956BEF2212296100960036 /* 08.png */,
+				70956C142212296800960036 /* 09.png */,
+				70956BF12212296100960036 /* 10.png */,
+				70956C242212296A00960036 /* 11.png */,
+				70956C0A2212296300960036 /* 12.png */,
+				70956C172212296800960036 /* 13.png */,
+				70956BF72212296200960036 /* 14.png */,
+				70956C1D2212296900960036 /* 15.png */,
+				70956BE92212296100960036 /* 16.png */,
+				70956C112212296400960036 /* 17.png */,
+				70956BE62212296100960036 /* 18.png */,
+				70956C192212296800960036 /* 19.png */,
+				70956C1B2212296900960036 /* 20.png */,
+				70956BFE2212296200960036 /* 21.png */,
+				70956BEE2212296100960036 /* 22.png */,
+				70956C152212296800960036 /* 23.png */,
+				70956BF02212296100960036 /* 24.png */,
+				70956C102212296400960036 /* 25.png */,
+			);
+			name = outputs;
+			sourceTree = "<group>";
+		};
+		70956C3222122BD000960036 /* inputs */ = {
+			isa = PBXGroup;
+			children = (
+				70956C262212296A00960036 /* 00.txt */,
+				70956BFC2212296200960036 /* 01.txt */,
+				70956C122212296400960036 /* 02.txt */,
+				70956C0F2212296400960036 /* 03.txt */,
+				70956BEC2212296100960036 /* 04.txt */,
+				70956C162212296800960036 /* 05.txt */,
+				70956BFB2212296200960036 /* 06.txt */,
+				70956C082212296300960036 /* 07.txt */,
+				70956C1E2212296900960036 /* 08.txt */,
+				70956C0C2212296400960036 /* 09.txt */,
+				70956BF82212296200960036 /* 10.txt */,
+				70956C022212296300960036 /* 11.txt */,
+				70956C072212296300960036 /* 12.txt */,
+				70956BF32212296100960036 /* 13.txt */,
+				70956C1F2212296900960036 /* 14.txt */,
+				70956C182212296800960036 /* 15.txt */,
+				70956BFF2212296200960036 /* 16.txt */,
+				70956C062212296300960036 /* 17.txt */,
+				70956C1A2212296800960036 /* 18.txt */,
+				70956BE82212296100960036 /* 19.txt */,
+				70956C232212296A00960036 /* 20.txt */,
+				70956C0E2212296400960036 /* 21.txt */,
+				70956C0D2212296400960036 /* 22.txt */,
+				70956C002212296200960036 /* 23.txt */,
+				70956BF42212296100960036 /* 24.txt */,
+				70956C202212296900960036 /* 25.txt */,
+			);
+			name = inputs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,7 +280,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70956C2A2212296A00960036 /* parse.cpp in Sources */,
 				70956BE0221228C500960036 /* main.cpp in Sources */,
+				70956C272212296A00960036 /* driver_state.cpp in Sources */,
+				70956C292212296A00960036 /* shaders.cpp in Sources */,
+				70956C282212296A00960036 /* dump_png.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +405,16 @@
 		70956BE4221228C500960036 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -247,7 +422,16 @@
 		70956BE5221228C500960036 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

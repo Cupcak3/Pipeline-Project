@@ -20,7 +20,16 @@ void initialize_render(driver_state& state, int width, int height)
     state.image_height=height;
     state.image_color=0;
     state.image_depth=0;
-    std::cout<<"TODO: allocate and initialize state.image_color and state.image_depth."<<std::endl;
+	// Allocate memory for image_color. Initialize all pixels to black. Ignore depth_image (Used in z-buffer later)
+	state.image_color = new pixel[width*height];
+	
+	for (int i = 0; i < state.image_height * state.image_width; ++i)
+	{
+		//0-255 with 0,0,0 being black and 255,255,255 being white
+		state.image_color[i] = make_pixel(0, 0, 0); // Initialize all pixels to black
+	}
+	
+    //std::cout<<"TODO: allocate and initialize state.image_color and state.image_depth."<<std::endl;
 }
 
 // This function will be called to render the data that has been stored in this class.
@@ -32,6 +41,31 @@ void initialize_render(driver_state& state, int width, int height)
 //   render_type::strip -    The vertices are to be interpreted as a triangle strip.
 void render(driver_state& state, render_type type)
 {
+	switch (type)
+	{
+		case render_type::triangle:
+		{
+			std::cout<<"Type = triangle"<<std::endl;
+			//Read every 3 triangles in driver_state into data_geometry array
+			
+			//Call rasterize_triangle
+			break;
+		}
+		case render_type::indexed:
+		{
+			break;
+		}
+		case render_type::fan:
+		{
+			break;
+		}
+		case render_type::strip:
+		{
+			break;
+		}
+		default:
+			break;
+	}
     std::cout<<"TODO: implement rendering."<<std::endl;
 }
 

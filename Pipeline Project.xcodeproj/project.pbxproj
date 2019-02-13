@@ -96,6 +96,7 @@
 		70956C252212296A00960036 /* grading-scheme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "grading-scheme.txt"; sourceTree = "<group>"; };
 		70956C262212296A00960036 /* 00.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 00.txt; sourceTree = "<group>"; };
 		70956C2C22122A0D00960036 /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng15.framework; path = ../../../../../../../Library/Frameworks/libpng15.framework; sourceTree = "<group>"; };
+		70ECAE1B221275DB007550F3 /* output.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = output.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,19 +131,12 @@
 		70956BDE221228C500960036 /* Pipeline Project */ = {
 			isa = PBXGroup;
 			children = (
+				70ECAE1B221275DB007550F3 /* output.png */,
+				70ECAE1922126728007550F3 /* source */,
+				70ECAE1A22126733007550F3 /* headers */,
 				70956C3222122BD000960036 /* inputs */,
 				70956C3122122BAD00960036 /* outputs */,
 				70956BF62212296200960036 /* SConstruct */,
-				70956BEA2212296100960036 /* driver_state.cpp */,
-				70956BFA2212296200960036 /* dump_png.cpp */,
-				70956BDF221228C500960036 /* main.cpp */,
-				70956C132212296800960036 /* parse.cpp */,
-				70956C0B2212296400960036 /* shaders.cpp */,
-				70956C212212296900960036 /* common.h */,
-				70956C012212296200960036 /* driver_state.h */,
-				70956BF52212296200960036 /* mat.h */,
-				70956C052212296300960036 /* shaders.h */,
-				70956C1C2212296900960036 /* vec.h */,
 				70956BE72212296100960036 /* grading-script.py */,
 				70956BF22212296100960036 /* CMakeLists.txt */,
 				70956C252212296A00960036 /* grading-scheme.txt */,
@@ -222,6 +216,30 @@
 				70956C202212296900960036 /* 25.txt */,
 			);
 			name = inputs;
+			sourceTree = "<group>";
+		};
+		70ECAE1922126728007550F3 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				70956BEA2212296100960036 /* driver_state.cpp */,
+				70956BFA2212296200960036 /* dump_png.cpp */,
+				70956BDF221228C500960036 /* main.cpp */,
+				70956C132212296800960036 /* parse.cpp */,
+				70956C0B2212296400960036 /* shaders.cpp */,
+			);
+			name = source;
+			sourceTree = "<group>";
+		};
+		70ECAE1A22126733007550F3 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				70956C212212296900960036 /* common.h */,
+				70956C012212296200960036 /* driver_state.h */,
+				70956BF52212296200960036 /* mat.h */,
+				70956C052212296300960036 /* shaders.h */,
+				70956C1C2212296900960036 /* vec.h */,
+			);
+			name = headers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

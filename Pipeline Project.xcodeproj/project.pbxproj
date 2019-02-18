@@ -131,10 +131,10 @@
 		70956BDE221228C500960036 /* Pipeline Project */ = {
 			isa = PBXGroup;
 			children = (
-				70ECAE1B221275DB007550F3 /* output.png */,
 				70ECAE1922126728007550F3 /* source */,
 				70ECAE1A22126733007550F3 /* headers */,
 				70956C3222122BD000960036 /* inputs */,
+				70ECAE1B221275DB007550F3 /* output.png */,
 				70956C3122122BAD00960036 /* outputs */,
 				70956BF62212296200960036 /* SConstruct */,
 				70956BE72212296100960036 /* grading-script.py */,

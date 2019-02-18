@@ -49,40 +49,30 @@ void render(driver_state& state, render_type type)
 		case render_type::triangle:
 		{
 			std::cout<<"Type = triangle"<<std::endl;
-			/*
-			 *  v# are float arrays
-			 *  v1 = x1 y1 z1
-			 *  v2 = x2 y2 z2
-			 *  v3 = x3 y3 z3
-			 *  g_array = {v1, v2, v3} = (data) = {x1 y1 z1, x2 y2 z2, x3 y3 z3}
-			 */
-			
 			//Read every 3 verticies into a data_geometry array, call rasterize_triangle
-			data_geometry* g_array = new data_geometry[3];
-			int k = 0;
-			for (int i = 0; i < state.num_vertices*state.floats_per_vertex; i+=state.floats_per_vertex)
+			const data_geometry* g_array[3];
+			//Go over all vertices
+			for (int i = 0; i < state.num_vertices*state.floats_per_vertex; i+=3*state.floats_per_vertex)
 			{
-				//g_array[k]'s data now points to the first vertex coordinate data address
-				g_array[k].data = &state.vertex_data[i];
-				++k;
-			}
-			/* Debugging for correctness
-			std::cout<<"array data:\n{";
-			for (int i = 0; i < 3; ++i)
-			{
-				std::cout<<"( ";
-				for (int j = 0; j < state.floats_per_vertex; ++j)
-				{
-					std::cout<<g_array[i].data[j]<<" ";
-				}
-				std::cout<<")";
-			}
-			std::cout<<"}"<<std::endl;
-			 */
+				//Process 3 verticies at a time
+				data_geometry g1, g2, g3;
+				data_vertex v1, v2, v3;
+				
+				v1.data = &state.vertex_data[i];
+				v2.data = &state.vertex_data[i+state.floats_per_vertex];
+				v3.data = &state.vertex_data[i+2*state.floats_per_vertex];
+				
+				state.vertex_shader(v1,g1,state.uniform_data);
+				state.vertex_shader(v2,g2,state.uniform_data);
+				state.vertex_shader(v3,g3,state.uniform_data);
 			
-			const data_geometry* g = g_array;
-			//Call rasterize_triangle
-			rasterize_triangle(state, &g);
+				g_array[0] = &g1;
+				g_array[1] = &g2;
+				g_array[2] = &g3;
+	
+				//Render each triangle
+				rasterize_triangle(state, g_array);
+			}
 			break;
 		}
 		case render_type::indexed:
@@ -124,33 +114,77 @@ void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
 // fragments, calling the fragment shader, and z-buffering.
 void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 {
-	for (int i = 0; i < 3; ++i)
+	
+	for (int k = 0; k < 3; ++k)
 	{
-		data_vertex * v_data = new data_vertex;
-		data_geometry vertex = *in[i];
-		
-		v_data->data = in[i]->data;
-		
-		void (*shader) (const data_vertex&, data_geometry&, const float*) = state.vertex_shader;
-		shader(*v_data, vertex, state.uniform_data); //vertex now has position filled in (?) as (x y z w)
-		vertex.gl_Position /= vertex.gl_Position[3]; // Divide position by w (?)
-		
 		//Calculate pixel coordinates
 		//	X and Y positions in NDC (each from -1 to 1)
 		//		X from 0 to width, Y from 0 to height
 		//  	NDC(-1,-1) is bottom left corner but not center of bottom left pixel
 		// 		(x,y) in 2D NDC -------> (i,j) in pixel space
-		// 		i =
-		// 		j =
+		// 		i = (w/2)x + (w/2 - .5)
+		// 		j = (h/2)y + (h/2 - .5)
 		
-		//Draw verticies in image (useing image_color in driver_state)
-		//	Make sure they fall on vertices of 00.png
+		int i = (state.image_width/2) * in[k]->gl_Position[0] + ((state.image_width/2) - .5);
+		int j = (state.image_height/2) * in[k]->gl_Position[1] + ((state.image_height/2) - .5);
+		
+		// Draw verticies in image (using image_color in driver_state)
+		// 	Make sure they fall on vertices of 00.png
 		//	Already have (i,j) of pixel position. Determine specific pixel of color_image to set using (i,j)
-		
-		//Rasterize triangle
-		//	Iterate over all pixels
-		//		At pixel (i,j) use barycentric coordinates of pixel to determine if pixel is inside triangle or not.
-		//		If inside set to white
+		// (i,j) --> 0 1 2 3 4 5 ... ij ... width*height
+	
+		//int pixel_index = i + j * state.image_width;
+		//state.image_color[pixel_index] = make_pixel(255, 255, 255);
+		std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
+	}
+	
+
+	//return;
+	//Rasterize triangle
+	//	Iterate over all pixels
+	//		At pixel (i,j) use barycentric coordinates of pixel to determine if pixel is inside triangle or not.
+	//		If inside set to white
+	
+	int Ax = (state.image_width/2) * in[0]->gl_Position[0] + ((state.image_width/2) - .5);
+	int Ay = (state.image_height/2) * in[0]->gl_Position[1] + ((state.image_height/2) - .5);
+	
+	int Bx = (state.image_width/2) * in[1]->gl_Position[0] + ((state.image_width/2) - .5);
+	int By = (state.image_height/2) * in[1]->gl_Position[1] + ((state.image_height/2) - .5);
+	
+	int Cx = (state.image_width/2) * in[2]->gl_Position[0] + ((state.image_width/2) - .5);
+	int Cy = (state.image_height/2) * in[2]->gl_Position[1] + ((state.image_height/2) - .5);
+	
+	float A_Triangle_Total = 0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) - (Ax*By - Bx*Ax));
+	
+	int maxX = std::max({Ax, Bx, Cx});
+	int minX = std::min({Ax, Bx, Cx});
+	
+	int maxY = std::max({Ay, By, Cy});
+	int minY = std::min({Ay, By, Cy});
+	
+	for (int j = minY; j < maxY; ++j)
+	{
+		for (int i = minX+1; i < maxX; ++i)
+		{
+			
+			float alpha = -1, beta = -1, gamma = -1;
+			
+			float tri_A = 0.5 * ((Bx*Cy - Cx*By) - (i*Cy - Cx*j) - (i*By - Bx*i));
+			float tri_B = 0.5 * ((i*Cy - Cx*j) - (Ax*Cy - Cx*Ay) - (Ax*j - j*Ax));
+			float tri_C = 0.5 * ((Bx*j - j*By) - (Ax*j - i*Ay) - (Ax*By - Bx*Ax));
+			
+			alpha = tri_A / A_Triangle_Total;
+			beta  = tri_B / A_Triangle_Total;
+			gamma = tri_C / A_Triangle_Total;
+			
+			if (alpha >= 0 && beta >= 0 && gamma >= 0)
+			{
+				//std::cout<<i+j*state.image_width<<" vs "<<state.image_height*state.image_width<<std::endl;
+				state.image_color[i+j*state.image_width] = make_pixel(255, 255, 255);
+			}
+			
+		}
+	}
 		
 		//Extras
 		//	Determine square containing triangle. Only scan that square
@@ -161,7 +195,6 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 		// 		Only one interp_rule for each float in vertex.data. If the rule type is noperspective, interpolate float from
 		//		3 vertices using barycentric coordinates.
 		
-	}
     std::cout<<"TODO: implement rasterization"<<std::endl;
 }
 

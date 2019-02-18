@@ -48,7 +48,7 @@ void render(driver_state& state, render_type type)
 	{
 		case render_type::triangle:
 		{
-			std::cout<<"Type = triangle"<<std::endl;
+			//std::cout<<"Type = triangle"<<std::endl;
 			//Read every 3 verticies into a data_geometry array, call rasterize_triangle
 			const data_geometry* g_array[3];
 			//Go over all vertices
@@ -66,6 +66,21 @@ void render(driver_state& state, render_type type)
 				state.vertex_shader(v2,g2,state.uniform_data);
 				state.vertex_shader(v3,g3,state.uniform_data);
 			
+				g1.gl_Position[0] *= state.image_width/2;
+				g1.gl_Position[0] += ((state.image_width/2)-.5);
+				g1.gl_Position[1] *= state.image_height/2;
+				g1.gl_Position[1] += ((state.image_height/2)-.5);
+				
+				g2.gl_Position[0] *= state.image_width/2;
+				g2.gl_Position[0] += ((state.image_width/2)-.5);
+				g2.gl_Position[1] *= state.image_height/2;
+				g2.gl_Position[1] += ((state.image_height/2)-.5);
+				
+				g3.gl_Position[0] *= state.image_width/2;
+				g3.gl_Position[0] += ((state.image_width/2)-.5);
+				g3.gl_Position[1] *= state.image_height/2;
+				g3.gl_Position[1] += ((state.image_height/2)-.5);
+				
 				g_array[0] = &g1;
 				g_array[1] = &g2;
 				g_array[2] = &g3;
@@ -73,6 +88,10 @@ void render(driver_state& state, render_type type)
 				//Render each triangle
 				rasterize_triangle(state, g_array);
 			}
+			g_array[0] = 0;
+			g_array[1] = 0;
+			g_array[2] = 0;
+			
 			break;
 		}
 		case render_type::indexed:
@@ -90,7 +109,7 @@ void render(driver_state& state, render_type type)
 		default:
 			break;
 	}
-    std::cout<<"TODO: implement rendering."<<std::endl;
+    //std::cout<<"TODO: implement rendering."<<std::endl;
 }
 
 
@@ -114,7 +133,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
 // fragments, calling the fragment shader, and z-buffering.
 void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 {
-	
+	/*
 	for (int k = 0; k < 3; ++k)
 	{
 		//Calculate pixel coordinates
@@ -135,8 +154,8 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	
 		//int pixel_index = i + j * state.image_width;
 		//state.image_color[pixel_index] = make_pixel(255, 255, 255);
-		std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
-	}
+		//std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
+	}*/
 	
 
 	//return;
@@ -144,7 +163,7 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	//	Iterate over all pixels
 	//		At pixel (i,j) use barycentric coordinates of pixel to determine if pixel is inside triangle or not.
 	//		If inside set to white
-	
+	/*
 	int Ax = (state.image_width/2) * in[0]->gl_Position[0] + ((state.image_width/2) - .5);
 	int Ay = (state.image_height/2) * in[0]->gl_Position[1] + ((state.image_height/2) - .5);
 	
@@ -153,6 +172,17 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	
 	int Cx = (state.image_width/2) * in[2]->gl_Position[0] + ((state.image_width/2) - .5);
 	int Cy = (state.image_height/2) * in[2]->gl_Position[1] + ((state.image_height/2) - .5);
+	*/
+	
+	int Ax = in[0]->gl_Position[0];
+	int Ay = in[0]->gl_Position[1];
+	
+	int Bx = in[1]->gl_Position[0];
+	int By = in[1]->gl_Position[1];
+	
+	int Cx = in[2]->gl_Position[0];
+	int Cy = in[2]->gl_Position[1];
+	
 	
 	float A_Triangle_Total = 0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) - (Ax*By - Bx*Ax));
 	
@@ -162,13 +192,19 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	int maxY = std::max({Ay, By, Cy});
 	int minY = std::min({Ay, By, Cy});
 	
+	float alpha = -1, beta = -1, gamma = -1;
+	/* Attempted optimizations
+	float k0 = (0.5 * (Bx*Cy - Cx*By)) / A_Triangle_Total;
+	float k1 = ((0.5 * ((Bx*Cy - Cx*By) - (Cy) - (By - Bx))) / A_Triangle_Total) - k0;
+	float k2 = ((0.5 * ((Bx*Cy - Cx*By) - (Cx))) / A_Triangle_Total) - k0;
+	*/
+	
 	for (int j = minY; j < maxY; ++j)
 	{
+		
 		for (int i = minX+1; i < maxX; ++i)
 		{
-			
-			float alpha = -1, beta = -1, gamma = -1;
-			
+			// Unoptimized
 			float tri_A = 0.5 * ((Bx*Cy - Cx*By) - (i*Cy - Cx*j) - (i*By - Bx*i));
 			float tri_B = 0.5 * ((i*Cy - Cx*j) - (Ax*Cy - Cx*Ay) - (Ax*j - j*Ax));
 			float tri_C = 0.5 * ((Bx*j - j*By) - (Ax*j - i*Ay) - (Ax*By - Bx*Ax));
@@ -177,18 +213,23 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 			beta  = tri_B / A_Triangle_Total;
 			gamma = tri_C / A_Triangle_Total;
 			
+			
 			if (alpha >= 0 && beta >= 0 && gamma >= 0)
 			{
-				//std::cout<<i+j*state.image_width<<" vs "<<state.image_height*state.image_width<<std::endl;
-				state.image_color[i+j*state.image_width] = make_pixel(255, 255, 255);
+				//Attempted optimization
+				data_output output;
+				const data_fragment fragment{};
+				float * frag_data = new float[MAX_FLOATS_PER_VERTEX];
+				state.fragment_shader(fragment, output, state.uniform_data);
+				
+				output.output_color *= 255;
+				state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
+				delete [] frag_data;
 			}
-			
 		}
 	}
 		
 		//Extras
-		//	Determine square containing triangle. Only scan that square
-		//		min/max x/y coordinates (x_min, x_max, y_min, y_max)
 		//	Use Fragment shader to calculate pixel color rather than setting to white explicitly
 		//		Use data_output in common.h and fragment_shader function in driver_state.h
 		//	Implement color interpolation by checking interp_rules in driver_state before sending color to the fragment_shader.

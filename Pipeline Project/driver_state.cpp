@@ -30,10 +30,23 @@ void initialize_render(driver_state& state, int width, int height)
 		//0-255 with 0,0,0 being black and 255,255,255 being white
 		state.image_color[i] = make_pixel(0, 0, 0); // Initialize all pixels to black
 	}
-	
-	//std::cout<<"TODO: allocate and initialize state.image_color and state.image_depth."<<std::endl;
 }
 
+
+static void divide_coordinates(data_geometry &g)
+{
+	g.gl_Position[0] /= g.gl_Position[3];
+}
+
+static void translate_to_pixel_space(data_geometry &g, driver_state &state)
+{
+	//Calculate pixel coordinates
+	// 		(x,y) in 2D NDC -------> (i,j) in pixel space
+	// 		i = (w/2)x + (w/2 - .5)
+	// 		j = (h/2)y + (h/2 - .5)
+	g.gl_Position[0] = ((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5);
+	g.gl_Position[1] = ((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5);
+}
 
 // This function will be called to render the data that has been stored in this class.
 // Valid values of type are:
@@ -62,29 +75,26 @@ void render(driver_state& state, render_type type)
 				v2.data = &state.vertex_data[i+state.floats_per_vertex];
 				v3.data = &state.vertex_data[i+2*state.floats_per_vertex];
 				
+				g1.data = v1.data;
+				g2.data = v2.data;
+				g3.data = v3.data;
+				
 				state.vertex_shader(v1,g1,state.uniform_data);
 				state.vertex_shader(v2,g2,state.uniform_data);
 				state.vertex_shader(v3,g3,state.uniform_data);
+				
+				divide_coordinates(g1);
+				divide_coordinates(g2);
+				divide_coordinates(g3);
 			
-				g1.gl_Position[0] *= state.image_width/2;
-				g1.gl_Position[0] += ((state.image_width/2)-.5);
-				g1.gl_Position[1] *= state.image_height/2;
-				g1.gl_Position[1] += ((state.image_height/2)-.5);
-				
-				g2.gl_Position[0] *= state.image_width/2;
-				g2.gl_Position[0] += ((state.image_width/2)-.5);
-				g2.gl_Position[1] *= state.image_height/2;
-				g2.gl_Position[1] += ((state.image_height/2)-.5);
-				
-				g3.gl_Position[0] *= state.image_width/2;
-				g3.gl_Position[0] += ((state.image_width/2)-.5);
-				g3.gl_Position[1] *= state.image_height/2;
-				g3.gl_Position[1] += ((state.image_height/2)-.5);
+				translate_to_pixel_space(g1, state);
+				translate_to_pixel_space(g2, state);
+				translate_to_pixel_space(g3, state);
 				
 				g_array[0] = &g1;
 				g_array[1] = &g2;
 				g_array[2] = &g3;
-	
+				
 				//Render each triangle
 				rasterize_triangle(state, g_array);
 			}
@@ -128,6 +138,33 @@ void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
     clip_triangle(state,in,face+1);
 }
 
+static double calc_area(int Ax, int Ay, int Bx, int By, int Cx, int Cy)
+{
+	return abs(0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) - (Ax*By - Bx*Ay)));
+}
+/*
+static void temp(int i, const data_geometry **in, int j, driver_state &state) {
+	data_output output;
+	float * frag_data = new float[MAX_FLOATS_PER_VERTEX];
+	
+	for (int k = 0; k < 3; ++k)
+	{
+		for (int l = 0; l < state.floats_per_vertex; ++l)
+		{
+			frag_data[k+l] = in[k]->data[l];
+		}
+	}
+	
+	const data_fragment fragment {frag_data};
+	
+	state.fragment_shader(fragment, output, state.uniform_data);
+	output.output_color *= 255;
+	
+	state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
+	
+	delete [] frag_data;
+}
+*/
 // Rasterize the triangle defined by the three vertices in the "in" array.  This
 // function is responsible for rasterization, interpolation of data to
 // fragments, calling the fragment shader, and z-buffering.
@@ -136,106 +173,83 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	/*
 	for (int k = 0; k < 3; ++k)
 	{
-		//Calculate pixel coordinates
-		//	X and Y positions in NDC (each from -1 to 1)
-		//		X from 0 to width, Y from 0 to height
-		//  	NDC(-1,-1) is bottom left corner but not center of bottom left pixel
-		// 		(x,y) in 2D NDC -------> (i,j) in pixel space
-		// 		i = (w/2)x + (w/2 - .5)
-		// 		j = (h/2)y + (h/2 - .5)
+		int i = in[k]->gl_Position[0];
+		int j = in[k]->gl_Position[1];
 		
-		int i = (state.image_width/2) * in[k]->gl_Position[0] + ((state.image_width/2) - .5);
-		int j = (state.image_height/2) * in[k]->gl_Position[1] + ((state.image_height/2) - .5);
-		
-		// Draw verticies in image (using image_color in driver_state)
-		// 	Make sure they fall on vertices of 00.png
-		//	Already have (i,j) of pixel position. Determine specific pixel of color_image to set using (i,j)
-		// (i,j) --> 0 1 2 3 4 5 ... ij ... width*height
+		std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
+	}
+	 */
 	
-		//int pixel_index = i + j * state.image_width;
-		//state.image_color[pixel_index] = make_pixel(255, 255, 255);
-		//std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
-	}*/
-	
-
-	//return;
 	//Rasterize triangle
 	//	Iterate over all pixels
 	//		At pixel (i,j) use barycentric coordinates of pixel to determine if pixel is inside triangle or not.
 	//		If inside set to white
-	/*
-	int Ax = (state.image_width/2) * in[0]->gl_Position[0] + ((state.image_width/2) - .5);
-	int Ay = (state.image_height/2) * in[0]->gl_Position[1] + ((state.image_height/2) - .5);
 	
-	int Bx = (state.image_width/2) * in[1]->gl_Position[0] + ((state.image_width/2) - .5);
-	int By = (state.image_height/2) * in[1]->gl_Position[1] + ((state.image_height/2) - .5);
+	float Ax = in[0]->gl_Position[0];
+	float Ay = in[0]->gl_Position[1];
 	
-	int Cx = (state.image_width/2) * in[2]->gl_Position[0] + ((state.image_width/2) - .5);
-	int Cy = (state.image_height/2) * in[2]->gl_Position[1] + ((state.image_height/2) - .5);
-	*/
+	float Bx = in[1]->gl_Position[0];
+	float By = in[1]->gl_Position[1];
 	
-	int Ax = in[0]->gl_Position[0];
-	int Ay = in[0]->gl_Position[1];
+	float Cx = in[2]->gl_Position[0];
+	float Cy = in[2]->gl_Position[1];
 	
-	int Bx = in[1]->gl_Position[0];
-	int By = in[1]->gl_Position[1];
+	float A_Triangle_Total = (calc_area(Ax, Ay, Bx, By, Cx, Cy));
 	
-	int Cx = in[2]->gl_Position[0];
-	int Cy = in[2]->gl_Position[1];
+	float maxX = std::max(std::max(Ax, Bx), Cx);
+	float minX = std::min(std::min(Ax, Bx), Cx);
 	
-	
-	float A_Triangle_Total = 0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) - (Ax*By - Bx*Ax));
-	
-	int maxX = std::max({Ax, Bx, Cx});
-	int minX = std::min({Ax, Bx, Cx});
-	
-	int maxY = std::max({Ay, By, Cy});
-	int minY = std::min({Ay, By, Cy});
+	float maxY = std::max(std::max(Ay, By), Cy);
+	float minY = std::min(std::min(Ay, By), Cy);
 	
 	float alpha = -1, beta = -1, gamma = -1;
-	/* Attempted optimizations
-	float k0 = (0.5 * (Bx*Cy - Cx*By)) / A_Triangle_Total;
-	float k1 = ((0.5 * ((Bx*Cy - Cx*By) - (Cy) - (By - Bx))) / A_Triangle_Total) - k0;
-	float k2 = ((0.5 * ((Bx*Cy - Cx*By) - (Cx))) / A_Triangle_Total) - k0;
+	
+	// Attempted optimizations
+	/*
+	float a_k0 = calc_area(0, 0, Bx, By, Cx, Cy);
+	float a_k1 = calc_area(1, 0, Bx, By, Cx, Cy) - a_k0;
+	float a_k2 = calc_area(0, 1, Bx, By, Cx, Cy) - a_k0;
+	
+	float b_k0 = calc_area(Ax, Ay, 0, 0, Cx, Cy);
+	float b_k1 = calc_area(Ax, Ay, 1, 0, Cx, Cy) - b_k0;
+	float b_k2 = calc_area(Ax, Ay, 0, 1, Cx, Cy) - b_k0;
+	
+	float g_k0 = calc_area(Ax, Ay, Bx, By, 0, 0);
+	float g_k1 = calc_area(Ax, Ay, Bx, By, 1, 0) - g_k0;
+	float g_k2 = calc_area(Ax, Ay, Bx, By, 0, 1) - g_k0;
+	
+	alpha = a_k0 + a_k1*minX + a_k2*minY;
+	beta  = b_k0 + b_k1*minX + b_k2*minY;
+	gamma = g_k0 + g_k1*minX + g_k2*minY;
 	*/
 	
-	for (int j = minY; j < maxY; ++j)
+	for (int j = minY; j <= maxY; ++j)
 	{
-		
-		for (int i = minX+1; i < maxX; ++i)
+		for (int i = minX; i <= maxX; ++i)
 		{
 			// Unoptimized
-			float tri_A = 0.5 * ((Bx*Cy - Cx*By) - (i*Cy - Cx*j) - (i*By - Bx*i));
-			float tri_B = 0.5 * ((i*Cy - Cx*j) - (Ax*Cy - Cx*Ay) - (Ax*j - j*Ax));
-			float tri_C = 0.5 * ((Bx*j - j*By) - (Ax*j - i*Ay) - (Ax*By - Bx*Ax));
+			float tri_A = calc_area(i, j, Bx, By, Cx, Cy);
+			float tri_B = calc_area(Ax, Ay, i, j, Cx, Cy);
+			float tri_C = calc_area(Ax, Ay, Bx, By, i, j);
 			
 			alpha = tri_A / A_Triangle_Total;
 			beta  = tri_B / A_Triangle_Total;
 			gamma = tri_C / A_Triangle_Total;
 			
-			
-			if (alpha >= 0 && beta >= 0 && gamma >= 0)
+			if ((0 <= alpha) && (0 <= beta) && (0 <= gamma) && (alpha <= 1) && (beta <= 1) && (gamma <= 1))
 			{
 				//Attempted optimization
-				data_output output;
-				const data_fragment fragment{};
-				float * frag_data = new float[MAX_FLOATS_PER_VERTEX];
-				state.fragment_shader(fragment, output, state.uniform_data);
-				
-				output.output_color *= 255;
-				state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
-				delete [] frag_data;
+				//temp(i, in, j, state);
+				state.image_color[(int)(i+j*state.image_width)] = make_pixel(255, 255, 255);
 			}
 		}
 	}
-		
+	
 		//Extras
-		//	Use Fragment shader to calculate pixel color rather than setting to white explicitly
-		//		Use data_output in common.h and fragment_shader function in driver_state.h
 		//	Implement color interpolation by checking interp_rules in driver_state before sending color to the fragment_shader.
 		// 		Only one interp_rule for each float in vertex.data. If the rule type is noperspective, interpolate float from
 		//		3 vertices using barycentric coordinates.
-		
+	
     std::cout<<"TODO: implement rasterization"<<std::endl;
 }
 

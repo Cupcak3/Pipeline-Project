@@ -24,11 +24,13 @@ void initialize_render(driver_state& state, int width, int height)
     state.image_depth=0;
 	// Allocate memory for image_color. Initialize all pixels to black. Ignore depth_image (Used in z-buffer later)
 	state.image_color = new pixel[width*height];
+	state.image_depth = new float[width*height];
 
 	for (int i = 0; i < state.image_height * state.image_width; ++i)
 	{
 		//0-255 with 0,0,0 being black and 255,255,255 being white
 		state.image_color[i] = make_pixel(0, 0, 0); // Initialize all pixels to black
+		state.image_depth[i] = 2; // Each pixel's default depth is 2 > 1 so each will always be set when turning on pixels
 	}
 }
 
@@ -36,6 +38,7 @@ void initialize_render(driver_state& state, int width, int height)
 static void divide_coordinates(data_geometry &g)
 {
 	g.gl_Position[0] /= g.gl_Position[3];
+	g.gl_Position[1] /= g.gl_Position[3];
 }
 
 static void translate_to_pixel_space(data_geometry &g, driver_state &state)
@@ -140,31 +143,47 @@ void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
 
 static double calc_area(int Ax, int Ay, int Bx, int By, int Cx, int Cy)
 {
-	return abs(0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) - (Ax*By - Bx*Ay)));
+	return abs(0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) + (Ax*By - Bx*Ay)));
 }
-/*
-static void temp(int i, const data_geometry **in, int j, driver_state &state) {
+
+
+static void shade_pixel(int i, int j, const data_geometry **in, driver_state &state, float alpha, float beta, float gamma) {
 	data_output output;
 	float * frag_data = new float[MAX_FLOATS_PER_VERTEX];
 	
-	for (int k = 0; k < 3; ++k)
+	for (int m = 0; m < 3; ++m)
 	{
-		for (int l = 0; l < state.floats_per_vertex; ++l)
+		for (int n = 0; n < state.floats_per_vertex; ++n)
 		{
-			frag_data[k+l] = in[k]->data[l];
+			switch (state.interp_rules[m])
+			{
+				case interp_type::noperspective:
+				{
+					frag_data[m] = alpha * in[m]->data[n] + beta * in[m]->data[n] + gamma * in[m]->data[n];
+					continue;
+				}
+				case interp_type::flat:
+				{
+					std::cout<<"Value: "<<in[m]->data[n]<<std::endl;
+					frag_data[m] = in[m]->data[n];
+					continue;
+				}
+				default:
+					continue;
+			}
 		}
 	}
-	
 	const data_fragment fragment {frag_data};
 	
 	state.fragment_shader(fragment, output, state.uniform_data);
 	output.output_color *= 255;
 	
+	
 	state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
 	
 	delete [] frag_data;
 }
-*/
+
 // Rasterize the triangle defined by the three vertices in the "in" array.  This
 // function is responsible for rasterization, interpolation of data to
 // fragments, calling the fragment shader, and z-buffering.
@@ -185,22 +204,22 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	//		At pixel (i,j) use barycentric coordinates of pixel to determine if pixel is inside triangle or not.
 	//		If inside set to white
 	
-	float Ax = in[0]->gl_Position[0];
-	float Ay = in[0]->gl_Position[1];
+	int Ax = in[0]->gl_Position[0];
+	int Ay = in[0]->gl_Position[1];
 	
-	float Bx = in[1]->gl_Position[0];
-	float By = in[1]->gl_Position[1];
+	int Bx = in[1]->gl_Position[0];
+	int By = in[1]->gl_Position[1];
 	
-	float Cx = in[2]->gl_Position[0];
-	float Cy = in[2]->gl_Position[1];
+	int Cx = in[2]->gl_Position[0];
+	int Cy = in[2]->gl_Position[1];
 	
 	float A_Triangle_Total = (calc_area(Ax, Ay, Bx, By, Cx, Cy));
 	
-	float maxX = std::max(std::max(Ax, Bx), Cx);
-	float minX = std::min(std::min(Ax, Bx), Cx);
+	int maxX = std::max(std::max(Ax, Bx), Cx);
+	int minX = std::min(std::min(Ax, Bx), Cx);
 	
-	float maxY = std::max(std::max(Ay, By), Cy);
-	float minY = std::min(std::min(Ay, By), Cy);
+	int maxY = std::max(std::max(Ay, By), Cy);
+	int minY = std::min(std::min(Ay, By), Cy);
 	
 	float alpha = -1, beta = -1, gamma = -1;
 	
@@ -222,6 +241,7 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	beta  = b_k0 + b_k1*minX + b_k2*minY;
 	gamma = g_k0 + g_k1*minX + g_k2*minY;
 	*/
+
 	
 	for (int j = minY; j <= maxY; ++j)
 	{
@@ -238,9 +258,10 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 			
 			if ((0 <= alpha) && (0 <= beta) && (0 <= gamma) && (alpha <= 1) && (beta <= 1) && (gamma <= 1))
 			{
+				//color = alpha * color_v0 + beta * color_v1 + gamma * color_v3
 				//Attempted optimization
-				//temp(i, in, j, state);
-				state.image_color[(int)(i+j*state.image_width)] = make_pixel(255, 255, 255);
+				shade_pixel(i, j, in, state, alpha, beta, gamma);
+				//state.image_color[(int)(i+j*state.image_width)] = make_pixel(255, 255, 255);
 			}
 		}
 	}
@@ -250,6 +271,6 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 		// 		Only one interp_rule for each float in vertex.data. If the rule type is noperspective, interpolate float from
 		//		3 vertices using barycentric coordinates.
 	
-    std::cout<<"TODO: implement rasterization"<<std::endl;
+    //std::cout<<"TODO: implement rasterization"<<std::endl;
 }
 

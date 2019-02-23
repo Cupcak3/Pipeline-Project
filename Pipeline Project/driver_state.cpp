@@ -155,11 +155,11 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 	{
 		for (int n = 0; n < state.floats_per_vertex; ++n)
 		{
-			switch (state.interp_rules[m])
+			switch (state.interp_rules[m*state.floats_per_vertex+n])
 			{
 				case interp_type::noperspective:
 				{
-					frag_data[m] = alpha * in[m]->data[n] + beta * in[m]->data[n] + gamma * in[m]->data[n];
+					frag_data[n] = alpha * in[0]->data[n] + beta * in[1]->data[n] + gamma * in[2]->data[n];
 					continue;
 				}
 				case interp_type::flat:
@@ -200,7 +200,7 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 		
 		std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
 	}
-	 */
+	*/
 	
 	//Rasterize triangle
 	//	Iterate over all pixels
@@ -274,6 +274,6 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 		// 		Only one interp_rule for each float in vertex.data. If the rule type is noperspective, interpolate float from
 		//		3 vertices using barycentric coordinates.
 	
-    std::cout<<"TODO: implement rasterization"<<std::endl;
+    //std::cout<<"TODO: implement rasterization"<<std::endl;
 }
 

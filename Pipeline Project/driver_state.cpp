@@ -143,7 +143,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
 
 static double calc_area(int Ax, int Ay, int Bx, int By, int Cx, int Cy)
 {
-	return abs(0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) + (Ax*By - Bx*Ay)));
+	return (0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) + (Ax*By - Bx*Ay)));
 }
 
 
@@ -166,6 +166,10 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 				{
 					frag_data[m] = in[m]->data[n];
 					continue;
+				}
+				case interp_type::smooth:
+				{
+					
 				}
 				default:
 					continue;
@@ -259,8 +263,8 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 			{
 				//color = alpha * color_v0 + beta * color_v1 + gamma * color_v3
 				//Attempted optimization
-				//shade_pixel(i, j, in, state, alpha, beta, gamma);
-				state.image_color[(i+j*state.image_width)] = make_pixel(255, 255, 255);
+				shade_pixel(i, j, in, state, alpha, beta, gamma);
+				//state.image_color[(i+j*state.image_width)] = make_pixel(255, 255, 255);
 			}
 		}
 	}
@@ -270,6 +274,6 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 		// 		Only one interp_rule for each float in vertex.data. If the rule type is noperspective, interpolate float from
 		//		3 vertices using barycentric coordinates.
 	
-    //std::cout<<"TODO: implement rasterization"<<std::endl;
+    std::cout<<"TODO: implement rasterization"<<std::endl;
 }
 

@@ -164,7 +164,6 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 				}
 				case interp_type::flat:
 				{
-					std::cout<<"Value: "<<in[m]->data[n]<<std::endl;
 					frag_data[m] = in[m]->data[n];
 					continue;
 				}

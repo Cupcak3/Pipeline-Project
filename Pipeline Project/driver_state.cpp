@@ -207,22 +207,22 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	//		At pixel (i,j) use barycentric coordinates of pixel to determine if pixel is inside triangle or not.
 	//		If inside set to white
 	
-	int Ax = in[0]->gl_Position[0];
-	int Ay = in[0]->gl_Position[1];
+	float Ax = in[0]->gl_Position[0];
+	float Ay = in[0]->gl_Position[1];
 	
-	int Bx = in[1]->gl_Position[0];
-	int By = in[1]->gl_Position[1];
+	float Bx = in[1]->gl_Position[0];
+	float By = in[1]->gl_Position[1];
 	
-	int Cx = in[2]->gl_Position[0];
-	int Cy = in[2]->gl_Position[1];
+	float Cx = in[2]->gl_Position[0];
+	float Cy = in[2]->gl_Position[1];
 	
 	float A_Triangle_Total = (calc_area(Ax, Ay, Bx, By, Cx, Cy));
 	
-	int maxX = std::max(std::max(Ax, Bx), Cx);
-	int minX = std::min(std::min(Ax, Bx), Cx);
+	float maxX = std::max(std::max(Ax, Bx), Cx);
+	float minX = std::min(std::min(Ax, Bx), Cx);
 	
-	int maxY = std::max(std::max(Ay, By), Cy);
-	int minY = std::min(std::min(Ay, By), Cy);
+	float maxY = std::max(std::max(Ay, By), Cy);
+	float minY = std::min(std::min(Ay, By), Cy);
 	
 	float alpha = -1, beta = -1, gamma = -1;
 	

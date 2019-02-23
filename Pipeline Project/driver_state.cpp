@@ -259,8 +259,8 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 			{
 				//color = alpha * color_v0 + beta * color_v1 + gamma * color_v3
 				//Attempted optimization
-				shade_pixel(i, j, in, state, alpha, beta, gamma);
-				//state.image_color[(int)(i+j*state.image_width)] = make_pixel(255, 255, 255);
+				//shade_pixel(i, j, in, state, alpha, beta, gamma);
+				state.image_color[(i+j*state.image_width)] = make_pixel(255, 255, 255);
 			}
 		}
 	}

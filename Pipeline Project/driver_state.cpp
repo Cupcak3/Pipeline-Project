@@ -141,7 +141,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
     clip_triangle(state,in,face+1);
 }
 
-static double calc_area(int Ax, int Ay, int Bx, int By, int Cx, int Cy)
+static double calc_area(double Ax, double Ay, double Bx, double By, double Cx, double Cy)
 {
 	return (0.5 * ((Bx*Cy - Cx*By) - (Ax*Cy - Cx*Ay) + (Ax*By - Bx*Ay)));
 }

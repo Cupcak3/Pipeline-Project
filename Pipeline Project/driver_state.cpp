@@ -151,20 +151,20 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 	data_output output;
 	float * frag_data = new float[MAX_FLOATS_PER_VERTEX];
 	
-	for (int m = 0; m < 3; ++m)
+	for (int a = 0; a < 3; ++a)
 	{
-		for (int n = 0; n < state.floats_per_vertex; ++n)
+		for (int b = 0; b < state.floats_per_vertex; ++b)
 		{
-			switch (state.interp_rules[m*state.floats_per_vertex+n])
+			switch (state.interp_rules[a*state.floats_per_vertex+b])
 			{
 				case interp_type::noperspective:
 				{
-					frag_data[n] = alpha * in[0]->data[n] + beta * in[1]->data[n] + gamma * in[2]->data[n];
+					frag_data[b] = alpha * in[0]->data[b] + beta * in[1]->data[b] + gamma * in[2]->data[b];
 					continue;
 				}
 				case interp_type::flat:
 				{
-					frag_data[m] = in[m]->data[n];
+					frag_data[b] = in[a]->data[b];
 					continue;
 				}
 				case interp_type::smooth:
@@ -261,18 +261,12 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 			
 			if ((0 <= alpha) && (0 <= beta) && (0 <= gamma) && (alpha <= 1) && (beta <= 1) && (gamma <= 1))
 			{
-				//color = alpha * color_v0 + beta * color_v1 + gamma * color_v3
 				//Attempted optimization
 				shade_pixel(i, j, in, state, alpha, beta, gamma);
 				//state.image_color[(i+j*state.image_width)] = make_pixel(255, 255, 255);
 			}
 		}
 	}
-	
-		//Extras
-		//	Implement color interpolation by checking interp_rules in driver_state before sending color to the fragment_shader.
-		// 		Only one interp_rule for each float in vertex.data. If the rule type is noperspective, interpolate float from
-		//		3 vertices using barycentric coordinates.
 	
     //std::cout<<"TODO: implement rasterization"<<std::endl;
 }

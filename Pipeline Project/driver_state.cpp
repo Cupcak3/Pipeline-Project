@@ -35,10 +35,15 @@ void initialize_render(driver_state& state, int width, int height)
 }
 
 
-static void divide_coordinates(data_geometry &g)
+static float divide_coordinates(data_geometry &g)
 {
-	g.gl_Position[0] /= g.gl_Position[3];
-	g.gl_Position[1] /= g.gl_Position[3];
+	float w = g.gl_Position[3];
+	g.gl_Position[0] /= w;
+	g.gl_Position[1] /= w;
+	g.gl_Position[2] /= w;
+	g.gl_Position[3] /= w;
+	
+	return w;
 }
 
 static void translate_to_pixel_space(data_geometry &g, driver_state &state)
@@ -86,10 +91,6 @@ void render(driver_state& state, render_type type)
 				state.vertex_shader(v2,g2,state.uniform_data);
 				state.vertex_shader(v3,g3,state.uniform_data);
 				
-				divide_coordinates(g1);
-				divide_coordinates(g2);
-				divide_coordinates(g3);
-			
 				translate_to_pixel_space(g1, state);
 				translate_to_pixel_space(g2, state);
 				translate_to_pixel_space(g3, state);
@@ -99,7 +100,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				rasterize_triangle(state, g_array);
+				clip_triangle(state, g_array);
+				//rasterize_triangle(state, g_array);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -130,9 +132,27 @@ void render(driver_state& state, render_type type)
 // It will be called recursively, once for each clipping face (face=0, 1, ..., 5) to
 // clip against each of the clipping faces in turn.  When face=6, clip_triangle should
 // simply pass the call on to rasterize_triangle.
-void clip_triangle(driver_state& state, const data_geometry* in[3],int face)
+void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 {
-    if(face==6)
+	//{Difference from Positive side, W's become negative. Substitue X,Y,Z. W stays same}
+	// 0 x = 1
+		// if Xa < 1 inside
+		// if Xb > 1 outisde
+		// if Xc < 1 inside
+			// alpha = (Wb - Xb) / ((Xa-Wa)+(Wb-Xb))
+	// 1 x = -1
+	
+	// 2 y = 1
+	// 3 y = -1
+	
+	// 4 z = 1
+	// 5 z = -1
+		// alpha * Za + (1-alpha) * Zb = (x,y,-w,w)
+		// -(alpha*Za + (1-alpha) * Zb) = w
+		// alpha(Wa+Za) + (1-alpha)(Wb+Ab) = 0
+		// alpha = -1 (Wb*Zb) / (Za-(-Wa))+(-Wb-Zb)) {Difference from Positive side, W's become negative}
+	
+	if(face==6)
     {
         rasterize_triangle(state, in);
         return;
@@ -147,7 +167,15 @@ static double calc_area(double Ax, double Ay, double Bx, double By, double Cx, d
 }
 
 
-static void shade_pixel(int i, int j, const data_geometry **in, driver_state &state, float alpha, float beta, float gamma) {
+static float calc_depth(float alpha, float beta, float gamma, const data_geometry **in)
+{
+	//Z-buffer vec4 p' = alpha'*a' + beta'*b' + gamma'*c'
+	vec4 point_on_frag = alpha * in[0]->gl_Position + beta * in[1]->gl_Position + gamma * in[2]->gl_Position;
+	return point_on_frag[2];
+}
+
+static void shade_pixel(int i, int j, const data_geometry **in, driver_state &state, float alpha, float beta, float gamma)
+{
 	data_output output;
 	float * frag_data = new float[MAX_FLOATS_PER_VERTEX];
 	
@@ -169,7 +197,9 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 				}
 				case interp_type::smooth:
 				{
-					
+					//alpha = alpha' / (Wa*k);
+					//beta  = beta'  / (Wb*k);
+					//gamma = gamma' / (Wc*k);
 				}
 				default:
 					continue;
@@ -182,7 +212,13 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 	output.output_color *= 255;
 	
 	
-	state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
+	float depth = calc_depth(alpha, beta, gamma, in);
+	
+	if(depth <= state.image_depth[i+j*state.image_width])
+	{
+		state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
+		state.image_depth[i+j*state.image_width] = depth;
+	}
 	
 	delete [] frag_data;
 }
@@ -261,9 +297,7 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 			
 			if ((0 <= alpha) && (0 <= beta) && (0 <= gamma) && (alpha <= 1) && (beta <= 1) && (gamma <= 1))
 			{
-				//Attempted optimization
 				shade_pixel(i, j, in, state, alpha, beta, gamma);
-				//state.image_color[(i+j*state.image_width)] = make_pixel(255, 255, 255);
 			}
 		}
 	}

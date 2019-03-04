@@ -35,25 +35,33 @@ void initialize_render(driver_state& state, int width, int height)
 }
 
 
-static float divide_coordinates(data_geometry &g)
+static data_geometry perspective_divide(const data_geometry &g)
 {
 	float w = g.gl_Position[3];
-	g.gl_Position[0] /= w;
-	g.gl_Position[1] /= w;
-	g.gl_Position[2] /= w;
-	g.gl_Position[3] /= w;
+	data_geometry g_return = g;
 	
-	return w;
+	g_return.gl_Position[0] = g.gl_Position[0] / w;
+	g_return.gl_Position[1] = g.gl_Position[1] / w;
+	g_return.gl_Position[2] = g.gl_Position[2] / w;
+	//g_return.gl_Position[3] =g.gl_Position[3] / w;
+	
+	
+	
+	return g_return;
 }
 
-static void translate_to_pixel_space(data_geometry &g, driver_state &state)
+static data_geometry translate_to_pixel_space(data_geometry &g, const driver_state &state)
 {
 	//Calculate pixel coordinates
 	// 		(x,y) in 2D NDC -------> (i,j) in pixel space
 	// 		i = (w/2)x + (w/2 - .5)
 	// 		j = (h/2)y + (h/2 - .5)
-	g.gl_Position[0] = ((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5);
-	g.gl_Position[1] = ((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5);
+	data_geometry g_return = g;
+	
+	g_return.gl_Position[0] = ((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5);
+	g_return.gl_Position[1] = ((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5);
+	
+	return g_return;
 }
 
 // This function will be called to render the data that has been stored in this class.
@@ -91,17 +99,26 @@ void render(driver_state& state, render_type type)
 				state.vertex_shader(v2,g2,state.uniform_data);
 				state.vertex_shader(v3,g3,state.uniform_data);
 				
-				translate_to_pixel_space(g1, state);
-				translate_to_pixel_space(g2, state);
-				translate_to_pixel_space(g3, state);
-				
+
 				g_array[0] = &g1;
 				g_array[1] = &g2;
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				clip_triangle(state, g_array);
-				//rasterize_triangle(state, g_array);
+				
+				//clip_triangle(state, g_array, 0);
+				
+				
+				g1 = perspective_divide(g1);
+				g2 = perspective_divide(g2);
+				g3 = perspective_divide(g3);
+				
+				//Object to pixel space
+				translate_to_pixel_space(g1, state);
+				translate_to_pixel_space(g2, state);
+				translate_to_pixel_space(g3, state);
+				
+				rasterize_triangle(state, g_array);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -135,26 +152,66 @@ void render(driver_state& state, render_type type)
 void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 {
 	//{Difference from Positive side, W's become negative. Substitue X,Y,Z. W stays same}
-	// 0 x = 1
+	// 0 x = 1 right
 		// if Xa < 1 inside
 		// if Xb > 1 outisde
 		// if Xc < 1 inside
 			// alpha = (Wb - Xb) / ((Xa-Wa)+(Wb-Xb))
-	// 1 x = -1
+	// 1 x = -1 left
 	
-	// 2 y = 1
-	// 3 y = -1
+	// 2 y = 1 top
+	// 3 y = -1 bottom
 	
-	// 4 z = 1
-	// 5 z = -1
+	// 4 z = 1 far
+	// 5 z = -1 near
 		// alpha * Za + (1-alpha) * Zb = (x,y,-w,w)
 		// -(alpha*Za + (1-alpha) * Zb) = w
 		// alpha(Wa+Za) + (1-alpha)(Wb+Ab) = 0
 		// alpha = -1 (Wb*Zb) / (Za-(-Wa))+(-Wb-Zb)) {Difference from Positive side, W's become negative}
 	
-	if(face==6)
+	//DATA IS IN NDC WITH NO PERSPECTIVE DIVIDE
+	float alpha = 0;
+	int sign = (face % 2 == 0) ? 1 : -1;
+	int axis;
+	if (face == 0) // x = 1 right
+	{
+		
+	}
+	else if (face == 1) // x = -1 left
+	{
+		
+	}
+	else if (face == 2) // y = 1 top
+	{
+	
+	}
+	else if (face == 3) // y = -1 bottom
+	{
+	
+	}
+	else if (face == 4) // z = 1 far
+	{
+		
+	}
+	else if (face == 5) // z = -1 near
+	{
+		
+	}
+	else if (face == 6)
     {
-        rasterize_triangle(state, in);
+		//return;
+		
+		const data_geometry *tri[3];
+		
+		data_geometry g_a = perspective_divide(*in[0]);
+		data_geometry g_b = perspective_divide(*in[1]);
+		data_geometry g_c = perspective_divide(*in[2]);
+		
+		tri[0] = &g_a;
+		tri[1] = &g_b;
+		tri[2] = &g_c;
+		
+		rasterize_triangle(state, tri);
         return;
     }
     std::cout<<"TODO: implement clipping. (The current code passes the triangle through without clipping them.)"<<std::endl;

@@ -50,18 +50,14 @@ static data_geometry perspective_divide(const data_geometry &g)
 	return g_return;
 }
 
-static data_geometry translate_to_pixel_space(data_geometry &g, const driver_state &state)
+static void translate_to_pixel_space(data_geometry &g, driver_state &state)
 {
 	//Calculate pixel coordinates
 	// 		(x,y) in 2D NDC -------> (i,j) in pixel space
 	// 		i = (w/2)x + (w/2 - .5)
 	// 		j = (h/2)y + (h/2 - .5)
-	data_geometry g_return = g;
-	
-	g_return.gl_Position[0] = ((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5);
-	g_return.gl_Position[1] = ((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5);
-	
-	return g_return;
+	g.gl_Position[0] = ((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5);
+	g.gl_Position[1] = ((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5);
 }
 
 // This function will be called to render the data that has been stored in this class.
@@ -170,30 +166,28 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		// alpha = -1 (Wb*Zb) / (Za-(-Wa))+(-Wb-Zb)) {Difference from Positive side, W's become negative}
 	
 	//DATA IS IN NDC WITH NO PERSPECTIVE DIVIDE
-	float alpha = 0;
-	int sign = (face % 2 == 0) ? 1 : -1;
-	int axis;
-	if (face == 0) // x = 1 right
+	
+	if (face == 0) // x = 1
 	{
 		
 	}
-	else if (face == 1) // x = -1 left
+	else if (face == 1) // x = -1
 	{
 		
 	}
-	else if (face == 2) // y = 1 top
+	else if (face == 2) // y = 1
 	{
 	
 	}
-	else if (face == 3) // y = -1 bottom
+	else if (face == 3) // y = -1
 	{
 	
 	}
-	else if (face == 4) // z = 1 far
+	else if (face == 4) // z = 1
 	{
 		
 	}
-	else if (face == 5) // z = -1 near
+	else if (face == 5) // z = -1
 	{
 		
 	}

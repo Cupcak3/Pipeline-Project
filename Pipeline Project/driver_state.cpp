@@ -124,14 +124,165 @@ void render(driver_state& state, render_type type)
 		}
 		case render_type::indexed:
 		{
+			const data_geometry* g_array[3];
+			for (int i = 0; i < 3*state.num_triangles; i+=3)
+			{
+				//Process 3 verticies at a time
+				data_geometry g1, g2, g3;
+				data_vertex v1, v2, v3;
+				
+				v1.data = &state.vertex_data[state.index_data[i]  *state.floats_per_vertex];
+				v2.data = &state.vertex_data[state.index_data[i+1]*state.floats_per_vertex];
+				v3.data = &state.vertex_data[state.index_data[i+2]*state.floats_per_vertex];
+				
+				g1.data = v1.data;
+				g2.data = v2.data;
+				g3.data = v3.data;
+				
+				state.vertex_shader(v1,g1,state.uniform_data);
+				state.vertex_shader(v2,g2,state.uniform_data);
+				state.vertex_shader(v3,g3,state.uniform_data);
+				
+				
+				g_array[0] = &g1;
+				g_array[1] = &g2;
+				g_array[2] = &g3;
+				
+				//Render each triangle
+				
+				//clip_triangle(state, g_array, 0);
+				
+				
+				g1 = perspective_divide(g1);
+				g2 = perspective_divide(g2);
+				g3 = perspective_divide(g3);
+				
+				//Object to pixel space
+				translate_to_pixel_space(g1, state);
+				translate_to_pixel_space(g2, state);
+				translate_to_pixel_space(g3, state);
+				
+				rasterize_triangle(state, g_array);
+			}
+			
+			g_array[0] = 0;
+			g_array[1] = 0;
+			g_array[2] = 0;
+			
 			break;
 		}
 		case render_type::fan:
 		{
+			const data_geometry* g_array[3];
+			data_geometry base;
+			data_vertex base_data;
+			
+			base_data.data = &state.vertex_data[0];
+			base.data = base_data.data;
+			state.vertex_shader(base_data, base, state.uniform_data);
+
+			g_array[0] = &base;
+
+			base = perspective_divide(base);
+
+			translate_to_pixel_space(base, state);
+
+			for (int i = state.floats_per_vertex; i < state.num_vertices*state.floats_per_vertex-state.floats_per_vertex; i+=state.floats_per_vertex)
+			{
+				//Process 3 verticies at a time
+				data_geometry g2, g3;
+				data_vertex   v2, v3;
+				
+				v2.data = &state.vertex_data[i];
+				v3.data = &state.vertex_data[i+state.floats_per_vertex];
+				
+				g2.data = v2.data;
+				g3.data = v3.data;
+				
+				state.vertex_shader(v2,g2,state.uniform_data);
+				state.vertex_shader(v3,g3,state.uniform_data);
+				
+				
+				g_array[1] = &g2;
+				g_array[2] = &g3;
+				
+				//Render each triangle
+				
+				//clip_triangle(state, g_array, 0);
+				
+				
+				g2 = perspective_divide(g2);
+				g3 = perspective_divide(g3);
+				
+				//Object to pixel space
+				translate_to_pixel_space(g2, state);
+				translate_to_pixel_space(g3, state);
+				
+				
+				rasterize_triangle(state, g_array);
+			}
+			g_array[0] = 0;
+			g_array[1] = 0;
+			g_array[2] = 0;
+			
 			break;
 		}
 		case render_type::strip:
 		{
+			const data_geometry* g_array[3];
+			int flip = 0;
+			for (int i = 0; i < state.floats_per_vertex*state.num_vertices-2*state.floats_per_vertex; i+=state.floats_per_vertex)
+			{
+				data_geometry g1, g2, g3;
+				data_vertex v1, v2, v3;
+				
+				v1.data = &state.vertex_data[i];
+				v2.data = &state.vertex_data[i+state.floats_per_vertex];
+				v3.data = &state.vertex_data[i+2*state.floats_per_vertex];
+				
+				if (flip % 2 == 1)
+				{
+					data_vertex temp;
+					temp = v1;
+					v1 = v2;
+					v2 = temp;
+				}
+				
+				g1.data = v1.data;
+				g2.data = v2.data;
+				g3.data = v3.data;
+				
+				state.vertex_shader(v1,g1,state.uniform_data);
+				state.vertex_shader(v2,g2,state.uniform_data);
+				state.vertex_shader(v3,g3,state.uniform_data);
+				
+				
+				g_array[0] = &g1;
+				g_array[1] = &g2;
+				g_array[2] = &g3;
+				
+				//Render each triangle
+				
+				//clip_triangle(state, g_array, 0);
+				
+				
+				g1 = perspective_divide(g1);
+				g2 = perspective_divide(g2);
+				g3 = perspective_divide(g3);
+				
+				//Object to pixel space
+				translate_to_pixel_space(g1, state);
+				translate_to_pixel_space(g2, state);
+				translate_to_pixel_space(g3, state);
+				
+				rasterize_triangle(state, g_array);
+				++flip;
+			}
+			
+			g_array[0] = 0;
+			g_array[1] = 0;
+			g_array[2] = 0;
+			
 			break;
 		}
 		default:

@@ -6,7 +6,7 @@
 	<integer>9</integer>
 	<key>logs</key>
 	<dict>
-		<key>2D53707F-D3E5-4E3A-B8F7-2A93274BC21C</key>
+		<key>06AEE68C-DAA3-4134-8DF5-693147C58FE8</key>
 		<dict>
 			<key>className</key>
 			<string>IDEActivityLogSection</string>
@@ -15,19 +15,19 @@
 			<key>domainType</key>
 			<string>Xcode.IDEActivityLogDomainType.target.product-type.tool</string>
 			<key>fileName</key>
-			<string>2D53707F-D3E5-4E3A-B8F7-2A93274BC21C.xcactivitylog</string>
+			<string>06AEE68C-DAA3-4134-8DF5-693147C58FE8.xcactivitylog</string>
 			<key>highLevelStatus</key>
-			<string>W</string>
+			<string>S</string>
 			<key>signature</key>
 			<string>Pipeline_Project-cbgubzwqrnmopwageugrnkdytjui</string>
 			<key>timeStartedRecording</key>
-			<real>573417436.58361602</real>
+			<real>573941361.83811104</real>
 			<key>timeStoppedRecording</key>
-			<real>573417437.31496298</real>
+			<real>573941362.38595402</real>
 			<key>title</key>
 			<string>Build target Pipeline Project</string>
 			<key>uniqueIdentifier</key>
-			<string>2D53707F-D3E5-4E3A-B8F7-2A93274BC21C</string>
+			<string>06AEE68C-DAA3-4134-8DF5-693147C58FE8</string>
 		</dict>
 	</dict>
 	<key>preserveOldLogs</key>

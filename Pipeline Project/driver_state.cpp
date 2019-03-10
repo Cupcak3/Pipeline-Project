@@ -397,11 +397,15 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 					frag_data[b] = in[a]->data[b];
 					continue;
 				}
-				case interp_type::smooth:
+				case interp_type::smooth: //Perspective correct
 				{
 					//alpha = alpha' / (Wa*k);
 					//beta  = beta'  / (Wb*k);
 					//gamma = gamma' / (Wc*k);
+					float k = (alpha / in[0]->gl_Position[3]) + (beta / in[1]->gl_Position[3]) + (gamma / in[2]->gl_Position[3]);
+					alpha = (alpha / (in[0]->gl_Position[3]))/k;
+					beta  = (beta  / (in[1]->gl_Position[3]))/k;
+					gamma = (gamma / (in[2]->gl_Position[3]))/k;
 				}
 				default:
 					continue;

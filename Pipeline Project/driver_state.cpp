@@ -102,8 +102,8 @@ void render(driver_state& state, render_type type)
 				
 				//Render each triangle
 				
-				clip_triangle(state, g_array, 4);
-				return;
+				//clip_triangle(state, g_array, 4);
+				//return;
 				
 				g1 = perspective_divide(g1);
 				g2 = perspective_divide(g2);

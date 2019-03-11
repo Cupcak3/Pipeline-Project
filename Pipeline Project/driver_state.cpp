@@ -319,10 +319,10 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		translate_to_pixel_space(g_a, state);
 		translate_to_pixel_space(g_b, state);
 		translate_to_pixel_space(g_c, state);
-		std::cout<<"Rasterizing triangles with coordinates:\n";
+		//std::cout<<"Rasterizing triangles with coordinates:\n";
 		for (int i = 0; i < 3; ++i)
 		{
-			std::cout<<"("<<in[i]->gl_Position<<")"<<std::endl;
+			//std::cout<<"("<<in[i]->gl_Position<<")"<<std::endl;
 		}
 		rasterize_triangle(state, tri);
 		return;
@@ -367,7 +367,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 			inside_points[2] = 1;
 	}
 	
-	std::cout<<"Clipping face "<<face<<std::endl;
+	//std::cout<<"Clipping face "<<face<<std::endl;
 	if ((!inside_points[0] && !inside_points[1] && !inside_points[2]))
 	{
 		//std::cout<<"Error, no points within clipping axis"<<std::endl;
@@ -378,7 +378,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	
 	if (inside_points[0] && !(inside_points[1] && inside_points[2]))
 	{
-		std::cout<<"One point outside face " << face <<std::endl;
+		//std::cout<<"One point outside face " << face <<std::endl;
 		//A INSIDE   BC OUTSIDE
 		//TRIANGLE   A AB AC
 		float AB_t, AC_t;
@@ -403,7 +403,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[1] && !(inside_points[0] && inside_points[2]))
 	{
-		std::cout<<"One point outside face " << face<<std::endl;
+		//std::cout<<"One point outside face " << face<<std::endl;
 		//B INSIDE   AC OUTSIDE   B BC AB  <--
 		//A INSIDE   BC OUTISDE   A AB AC
 		float BC_t, AB_t;
@@ -427,7 +427,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[2] && !(inside_points[0] && inside_points[1]))
 	{
-		std::cout<<"One point outside face " << face<<std::endl;
+		//std::cout<<"One point outside face " << face<<std::endl;
 		//C INSIDE   AB OUTSIDE   C CA CB <--
 		//A INSIDE   BC OUTISDE   A AB AC
 
@@ -457,7 +457,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	
 	else if (inside_points[0] && inside_points[1] && !inside_points[2])
 	{
-		std::cout<<"Two points outside face " << face<<std::endl;
+		//std::cout<<"Two points outside face " << face<<std::endl;
 		//TRIANGLE               A B BC
 		//A INSIDE   BC OUTSIDE  A AB AC
 		float BB_t, BC_t;
@@ -502,7 +502,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[0] && inside_points[2] && !inside_points[1])
 	{
-		std::cout<<"Two points outside face " << face<<std::endl;
+		//std::cout<<"Two points outside face " << face<<std::endl;
 		//AC INSIDE   B OUTSIDE
 		
 		//TRIANGLE    C A AB
@@ -543,7 +543,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[1] && inside_points[2] && !inside_points[0])
 	{
-		std::cout<<"Two points outside face " << face<<std::endl;
+		//std::cout<<"Two points outside face " << face<<std::endl;
 		//BC INSIDE   A OUTSIDE
 		
 		//TRIANGLE    B C AC

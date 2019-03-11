@@ -101,7 +101,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				clip_triangle(state, g_array, 0);
+				clip_triangle(state, g_array, 6);
+				//clip_triangle(state, g_array, 0);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -136,8 +137,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				
-				clip_triangle(state, g_array, 0);
+				clip_triangle(state, g_array, 6);
+				//clip_triangle(state, g_array, 0);
 			}
 			
 			g_array[0] = 0;
@@ -182,8 +183,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				
-				clip_triangle(state, g_array, 0);
+				clip_triangle(state, g_array, 6);
+				//clip_triangle(state, g_array, 0);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -226,8 +227,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				
-				clip_triangle(state, g_array, 0);
+				clip_triangle(state, g_array, 6);
+				//clip_triangle(state, g_array, 0);
 				++flip;
 			}
 			
@@ -319,10 +320,10 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		translate_to_pixel_space(g_a, state);
 		translate_to_pixel_space(g_b, state);
 		translate_to_pixel_space(g_c, state);
-		//std::cout<<"Rasterizing triangles with coordinates:\n";
+		std::cout<<"Rasterizing triangles with coordinates:\n";
 		for (int i = 0; i < 3; ++i)
 		{
-			//std::cout<<"("<<in[i]->gl_Position<<")"<<std::endl;
+			std::cout<<"("<<in[i]->gl_Position<<")"<<std::endl;
 		}
 		rasterize_triangle(state, tri);
 		return;
@@ -342,18 +343,18 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	{
 		if (A[axis] < A[3])
 		{
-			//std::cout<<A[axis] << " < " << A[3] <<std:: endl;
+			std::cout<<A[axis] << " < " << A[3] <<std:: endl;
 			inside_points[0] = 1;
 		}
 		if (B[axis] < B[3])
 		{
-			//std::cout<<B[axis] << " < " << B[3] <<std:: endl;
+			std::cout<<B[axis] << " < " << B[3] <<std:: endl;
 			inside_points[1] = 1;
 		}
 		
 		if (C[axis] < C[3])
 		{
-			//std::cout<<C[axis] << " < " << C[3] <<std:: endl;
+			std::cout<<C[axis] << " < " << C[3] <<std:: endl;
 			inside_points[2] = 1;
 		}
 	}
@@ -367,10 +368,10 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 			inside_points[2] = 1;
 	}
 	
-	//std::cout<<"Clipping face "<<face<<std::endl;
+	std::cout<<"Clipping face "<<face<<std::endl;
 	if ((!inside_points[0] && !inside_points[1] && !inside_points[2]))
 	{
-		//std::cout<<"Error, no points within clipping axis"<<std::endl;
+		std::cout<<"Error, no points within clipping axis"<<std::endl;
 		return;
 	}
 	else if (inside_points[0] && inside_points[1] && inside_points[2]) clip_triangle(state, in, face+1);

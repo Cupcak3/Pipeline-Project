@@ -101,20 +101,7 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				
-				//clip_triangle(state, g_array, 4);
-				//return;
-				
-				g1 = perspective_divide(g1);
-				g2 = perspective_divide(g2);
-				g3 = perspective_divide(g3);
-				
-				//Object to pixel space
-				translate_to_pixel_space(g1, state);
-				translate_to_pixel_space(g2, state);
-				translate_to_pixel_space(g3, state);
-				
-				rasterize_triangle(state, g_array);
+				clip_triangle(state, g_array, 0);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -150,19 +137,7 @@ void render(driver_state& state, render_type type)
 				
 				//Render each triangle
 				
-				//clip_triangle(state, g_array, 0);
-				
-				
-				g1 = perspective_divide(g1);
-				g2 = perspective_divide(g2);
-				g3 = perspective_divide(g3);
-				
-				//Object to pixel space
-				translate_to_pixel_space(g1, state);
-				translate_to_pixel_space(g2, state);
-				translate_to_pixel_space(g3, state);
-				
-				rasterize_triangle(state, g_array);
+				clip_triangle(state, g_array, 0);
 			}
 			
 			g_array[0] = 0;
@@ -208,18 +183,7 @@ void render(driver_state& state, render_type type)
 				
 				//Render each triangle
 				
-				//clip_triangle(state, g_array, 0);
-				
-				
-				g2 = perspective_divide(g2);
-				g3 = perspective_divide(g3);
-				
-				//Object to pixel space
-				translate_to_pixel_space(g2, state);
-				translate_to_pixel_space(g3, state);
-				
-				
-				rasterize_triangle(state, g_array);
+				clip_triangle(state, g_array, 0);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -263,19 +227,7 @@ void render(driver_state& state, render_type type)
 				
 				//Render each triangle
 				
-				//clip_triangle(state, g_array, 0);
-				
-				
-				g1 = perspective_divide(g1);
-				g2 = perspective_divide(g2);
-				g3 = perspective_divide(g3);
-				
-				//Object to pixel space
-				translate_to_pixel_space(g1, state);
-				translate_to_pixel_space(g2, state);
-				translate_to_pixel_space(g3, state);
-				
-				rasterize_triangle(state, g_array);
+				clip_triangle(state, g_array, 0);
 				++flip;
 			}
 			
@@ -445,7 +397,6 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (face == 4) // z = 1
 	{
-		std::cout<<"Clipping near face"<<std::endl;
 		//Determine inside outside
 		for (int i = 0; i < 3; ++i)
 		{
@@ -609,7 +560,6 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (face == 5) // z = -1
 	{
-		std::cout<<"Clipping far face"<<std::endl;
 		//Determine inside outside
 		for (int i = 0; i < 3; ++i)
 		{
@@ -789,8 +739,8 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		rasterize_triangle(state, tri);
         return;
     }
-    std::cout<<"TODO: implement clipping. (The current code passes the triangle through without clipping them.)"<<std::endl;
-    clip_triangle(state,in,face+1);
+    //std::cout<<"TODO: implement clipping. (The current code passes the triangle through without clipping them.)"<<std::endl;
+    //clip_triangle(state,in,face+1);
 }
 
 static double calc_area(double Ax, double Ay, double Bx, double By, double Cx, double Cy)

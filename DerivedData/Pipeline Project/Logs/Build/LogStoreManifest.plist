@@ -122,6 +122,35 @@
 			<key>uniqueIdentifier</key>
 			<string>06BF7B0E-B761-49CF-B059-9179129B36EA</string>
 		</dict>
+		<key>09D43E18-E853-41BE-9EF3-CA8693C80542</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>09D43E18-E853-41BE-9EF3-CA8693C80542.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959149.19374597</real>
+			<key>timeStoppedRecording</key>
+			<real>573959149.44642794</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>09D43E18-E853-41BE-9EF3-CA8693C80542</string>
+		</dict>
 		<key>0A00CA61-DD09-4ADE-890C-7A1E487A675F</key>
 		<dict>
 			<key>className</key>
@@ -324,6 +353,35 @@
 			<string>Build Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>1A27C274-8509-4147-AB8A-674874E5F6C8</string>
+		</dict>
+		<key>1B47B81E-9CD8-498A-9460-03BB5741C263</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>1B47B81E-9CD8-498A-9460-03BB5741C263.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959109.92086005</real>
+			<key>timeStoppedRecording</key>
+			<real>573959110.604182</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>1B47B81E-9CD8-498A-9460-03BB5741C263</string>
 		</dict>
 		<key>1C76AD4C-75CF-4DDE-AAA7-EFB9320A877B</key>
 		<dict>
@@ -528,6 +586,35 @@
 			<key>uniqueIdentifier</key>
 			<string>42B3235F-3EBE-42B6-A31B-33C0C13139D2</string>
 		</dict>
+		<key>43D1C5A4-BD7A-4875-918F-ED73EB10B580</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>43D1C5A4-BD7A-4875-918F-ED73EB10B580.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959358.55685699</real>
+			<key>timeStoppedRecording</key>
+			<real>573959361.21241605</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>43D1C5A4-BD7A-4875-918F-ED73EB10B580</string>
+		</dict>
 		<key>46893AF0-FA1F-45D9-8F7A-1AA7004EF1E5</key>
 		<dict>
 			<key>className</key>
@@ -730,6 +817,35 @@
 			<string>Build Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>5AEB1E56-F723-4A5E-AD90-533E66A85F72</string>
+		</dict>
+		<key>5E9E1B48-395C-435A-84AB-8F4A016C1BD9</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>5E9E1B48-395C-435A-84AB-8F4A016C1BD9.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959407.03620899</real>
+			<key>timeStoppedRecording</key>
+			<real>573959407.65778005</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>5E9E1B48-395C-435A-84AB-8F4A016C1BD9</string>
 		</dict>
 		<key>629EC270-F6BB-45BE-B7EF-AB3BAAA412CA</key>
 		<dict>
@@ -1050,6 +1166,35 @@
 			<key>uniqueIdentifier</key>
 			<string>7321F176-97E9-467A-9180-5CC9C4E51F79</string>
 		</dict>
+		<key>74D4B97E-FE43-452E-B3BB-A3EB14ECF911</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>74D4B97E-FE43-452E-B3BB-A3EB14ECF911.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959450.34971297</real>
+			<key>timeStoppedRecording</key>
+			<real>573959451.11137199</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>74D4B97E-FE43-452E-B3BB-A3EB14ECF911</string>
+		</dict>
 		<key>74ED057F-236C-4AE9-9A11-9D99F754B437</key>
 		<dict>
 			<key>className</key>
@@ -1107,6 +1252,35 @@
 			<string>Build Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>77058ED4-816E-4619-8451-8454FA873ACC</string>
+		</dict>
+		<key>780BF7A2-2D62-441C-8EBA-8E666E5EABF6</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>780BF7A2-2D62-441C-8EBA-8E666E5EABF6.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959202.73831499</real>
+			<key>timeStoppedRecording</key>
+			<real>573959202.90582097</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>780BF7A2-2D62-441C-8EBA-8E666E5EABF6</string>
 		</dict>
 		<key>7ED63CFC-305F-4DBB-9891-C045E607C3AC</key>
 		<dict>
@@ -1166,6 +1340,35 @@
 			<key>uniqueIdentifier</key>
 			<string>7F2B6BC6-9265-4569-84F2-F408163F1B21</string>
 		</dict>
+		<key>8795EC73-6AF0-4D82-A53D-5103D39A162E</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>8795EC73-6AF0-4D82-A53D-5103D39A162E.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959121.55830598</real>
+			<key>timeStoppedRecording</key>
+			<real>573959122.21296704</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>8795EC73-6AF0-4D82-A53D-5103D39A162E</string>
+		</dict>
 		<key>8E98740E-4E62-4830-85A4-C822533367F3</key>
 		<dict>
 			<key>className</key>
@@ -1194,6 +1397,64 @@
 			<string>Build Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>8E98740E-4E62-4830-85A4-C822533367F3</string>
+		</dict>
+		<key>976DCA0D-562B-4B65-9BD8-90D54FB7693E</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>976DCA0D-562B-4B65-9BD8-90D54FB7693E.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573958913.82175004</real>
+			<key>timeStoppedRecording</key>
+			<real>573958914.52183902</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>976DCA0D-562B-4B65-9BD8-90D54FB7693E</string>
+		</dict>
+		<key>99E9072A-C04D-4C1B-A69E-C0CA82823D6B</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>99E9072A-C04D-4C1B-A69E-C0CA82823D6B.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959344.14863801</real>
+			<key>timeStoppedRecording</key>
+			<real>573959344.89388597</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>99E9072A-C04D-4C1B-A69E-C0CA82823D6B</string>
 		</dict>
 		<key>9DCC957A-21D8-4D62-817F-1BC9DC06EE3C</key>
 		<dict>
@@ -1340,6 +1601,35 @@
 			<key>uniqueIdentifier</key>
 			<string>A926E0E1-D6D1-49C3-BB12-7C57E5CC4131</string>
 		</dict>
+		<key>A96FBAC6-AA4C-40E2-AE2A-E6CA83491D54</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>A96FBAC6-AA4C-40E2-AE2A-E6CA83491D54.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959184.01591098</real>
+			<key>timeStoppedRecording</key>
+			<real>573959184.05641794</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>A96FBAC6-AA4C-40E2-AE2A-E6CA83491D54</string>
+		</dict>
 		<key>AE22F318-7131-4BE0-B2D1-1A1F20F9A562</key>
 		<dict>
 			<key>className</key>
@@ -1426,6 +1716,35 @@
 			<string>Build Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>B33C9A1B-B31B-46F7-807D-5A000AAD2A2A</string>
+		</dict>
+		<key>B50E6BE2-5A98-45F4-A91C-A9179E8826D3</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>B50E6BE2-5A98-45F4-A91C-A9179E8826D3.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959141.45533895</real>
+			<key>timeStoppedRecording</key>
+			<real>573959142.67349505</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>B50E6BE2-5A98-45F4-A91C-A9179E8826D3</string>
 		</dict>
 		<key>B7A12AE8-122D-45EB-83B6-5D0D2BCD79CB</key>
 		<dict>
@@ -1746,6 +2065,35 @@
 			<key>uniqueIdentifier</key>
 			<string>DEFEDEE6-61BE-4EA8-80D0-6B0BBE7C668B</string>
 		</dict>
+		<key>DF0D99F8-8A17-4883-A0A2-28B2A7032474</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>DF0D99F8-8A17-4883-A0A2-28B2A7032474.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959194.73871195</real>
+			<key>timeStoppedRecording</key>
+			<real>573959194.78333604</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>DF0D99F8-8A17-4883-A0A2-28B2A7032474</string>
+		</dict>
 		<key>E3C3FBED-3D85-4E03-89F9-BCE4BE1185E8</key>
 		<dict>
 			<key>className</key>
@@ -1803,6 +2151,35 @@
 			<string>Build Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>E675C79D-19A7-435B-A01B-A6CC16C25AC6</string>
+		</dict>
+		<key>E7B51179-11C4-41DF-86ED-B2817A9C43F0</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>E7B51179-11C4-41DF-86ED-B2817A9C43F0.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>W</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>573959309.25500703</real>
+			<key>timeStoppedRecording</key>
+			<real>573959311.07834804</real>
+			<key>title</key>
+			<string>Build Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>E7B51179-11C4-41DF-86ED-B2817A9C43F0</string>
 		</dict>
 		<key>E7DC2B53-FF44-4815-A6FA-548C65754585</key>
 		<dict>

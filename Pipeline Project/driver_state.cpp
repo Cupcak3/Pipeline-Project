@@ -137,8 +137,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				clip_triangle(state, g_array, 6);
-				//clip_triangle(state, g_array, 0);
+				//clip_triangle(state, g_array, 6);
+				clip_triangle(state, g_array, 0);
 			}
 			
 			g_array[0] = 0;
@@ -181,8 +181,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				clip_triangle(state, g_array, 6);
-				//clip_triangle(state, g_array, 0);
+				//clip_triangle(state, g_array, 6);
+				clip_triangle(state, g_array, 0);
 			}
 			g_array[0] = 0;
 			g_array[1] = 0;
@@ -225,8 +225,8 @@ void render(driver_state& state, render_type type)
 				g_array[2] = &g3;
 				
 				//Render each triangle
-				clip_triangle(state, g_array, 6);
-				//clip_triangle(state, g_array, 0);
+				//clip_triangle(state, g_array, 6);
+				clip_triangle(state, g_array, 0);
 				++flip;
 			}
 			
@@ -243,16 +243,132 @@ void render(driver_state& state, render_type type)
 }
 
 
-static void interpolation_helper(vec4 &A, float alpha_1, float alpha_2, vec4 &B, vec4 &C, data_geometry *data_array, const data_geometry **in, driver_state &state) {
+static void interpolation_helper(vec4 &point_1, float alpha_1, float alpha_2, vec4 &point_2, vec4 &point_3, data_geometry *data_array, const data_geometry **in, driver_state &state, int tri_case) {
 	for (int i = 0; i < 3; ++i)
 	{
 		data_array[i].data = new float[MAX_FLOATS_PER_VERTEX];
+		for (int j = 0; j < MAX_FLOATS_PER_VERTEX; ++j)
+		{
+			data_array[i].data[j] = 0; //Zero everything out
+		}
 	}
 	
 	for (int i = 0; i < state.floats_per_vertex-1; ++i)
 	{
 		switch (state.interp_rules[i])
 		{
+			case interp_type::smooth:
+			{
+				//std::cout<<"s"<<std::endl;
+				switch (tri_case) {
+					case 1:
+					{
+						float k_1 = 1.0 / (alpha_1 * point_1[3] + (1-alpha_1) * point_2[3]);
+						float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_3[3]);
+						float alpha_1_corrected = alpha_1 * point_1[3] * k_1;
+						float alpha_2_corrected = alpha_2 * point_1[3] * k_2;
+						
+						data_array[0].data = in[0]->data;
+						data_array[1].data[i] = alpha_1_corrected * in[0]->data[i] + (1-alpha_1_corrected) * in[1]->data[i];
+						data_array[2].data[i] = alpha_2_corrected * in[0]->data[i] + (1-alpha_2_corrected) * in[2]->data[i];
+						break;
+					}
+					case 2:
+					{
+						float k_1 = 1.0 / (alpha_1 * point_2[3] + (1-alpha_1) * point_3[3]);
+						float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_2[3]);
+						float alpha_1_corrected = alpha_1 * point_2[3] * k_1;
+						float alpha_2_corrected = alpha_2 * point_1[3] * k_2;
+						
+						data_array[0].data = in[1]->data;
+						data_array[1].data[i] = alpha_1_corrected * in[1]->data[i] + (1-alpha_1_corrected) * in[2]->data[i];
+						data_array[2].data[i] = alpha_2_corrected * in[0]->data[i] + (1-alpha_2_corrected) * in[1]->data[i];
+						break;
+					}
+					case 3:
+					{
+						float k_1 = 1.0 / (alpha_1 * point_3[3] + (1-alpha_1) * point_1[3]);
+						float k_2 = 1.0 / (alpha_2 * point_3[3] + (1-alpha_2) * point_2[3]);
+						float alpha_1_corrected = alpha_1 * point_3[3] * k_1;
+						float alpha_2_corrected = alpha_2 * point_3[3] * k_2;
+						
+						data_array[0].data = in[0]->data;
+						data_array[1].data[i] = alpha_1_corrected * in[3]->data[i] + (1-alpha_1_corrected) * in[0]->data[i];
+						data_array[2].data[i] = alpha_2_corrected * in[3]->data[i] + (1-alpha_2_corrected) * in[1]->data[i];
+						break;
+					}
+					case 4:
+					{
+						float k_2 = 1.0 / (alpha_2 * point_2[3] + (1-alpha_2) * point_3[3]);
+						float alpha_2_corrected = alpha_2 * point_2[3] * k_2;
+						
+						data_array[0].data = in[0]->data;
+						data_array[1].data = in[1]->data;
+						data_array[2].data[i] = alpha_2_corrected * in[1]->data[i] + (1-alpha_2_corrected) * in[2]->data[i];
+						break;
+					}
+					case 5:
+					{
+						float k_1 = 1.0 / (alpha_1 * point_2[3] + (1-alpha_1) * point_3[3]);
+						float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_3[3]);
+						float alpha_1_corrected = alpha_1 * point_2[3] * k_1;
+						float alpha_2_corrected = alpha_2 * point_1[3] * k_2;
+						
+						data_array[0].data = in[0]->data;
+						data_array[1].data[i] = alpha_1_corrected * in[1]->data[i] + (1-alpha_1_corrected) * in[2]->data[i];
+						data_array[2].data[i] = alpha_2_corrected * in[0]->data[i] + (1-alpha_2_corrected) * in[2]->data[i];
+						break;
+					}
+					case 6:
+					{
+						float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_2[3]); // FIX POINTS
+						float alpha_2_corrected = alpha_2 * point_1[3] * k_2; // FIX POINTS
+						
+						data_array[0].data = in[2]->data;
+						data_array[1].data = in[0]->data;
+						data_array[2].data[i] = alpha_2_corrected * in[0]->data[i] + (1-alpha_2_corrected) * in[1]->data[i];
+						break;
+					}
+					case 7:
+					{
+						float k_1 = 1.0 / (alpha_1 * point_1[3] + (1-alpha_1) * point_2[3]);
+						float k_2 = 1.0 / (alpha_2 * point_2[3] + (1-alpha_2) * point_3[3]);
+						float alpha_1_corrected = alpha_1 * point_1[3] * k_1;
+						float alpha_2_corrected = alpha_2 * point_2[3] * k_2;
+						
+						data_array[0].data = in[0]->data;
+						data_array[1].data[i] = alpha_1_corrected * in[0]->data[i] + (1-alpha_1_corrected) * in[1]->data[i];
+						data_array[2].data[i] = alpha_2_corrected * in[1]->data[i] + (1-alpha_2_corrected) * in[2]->data[i];
+						break;
+					}
+					case 8:
+					{
+						float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_3[3]);
+						float alpha_2_corrected = alpha_2 * point_1[3] * k_2;
+						
+						data_array[0].data = in[1]->data;
+						data_array[1].data = in[2]->data;
+						data_array[2].data[i] = alpha_2_corrected * in[0]->data[i] + (1-alpha_2_corrected) * in[2]->data[i];
+						break;
+					}
+					case 9:
+					{
+						float k_1 = 1.0 / (alpha_1 * point_1[3] + (1-alpha_1) * point_3[3]);
+						float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_2[3]);
+						float alpha_1_corrected = alpha_1 * point_1[3] * k_1;
+						float alpha_2_corrected = alpha_2 * point_1[3] * k_2;
+						
+						data_array[0].data = in[1]->data;
+						data_array[1].data[i] = alpha_1_corrected * in[0]->data[i] + (1-alpha_1_corrected) * in[2]->data[i];
+						data_array[2].data[i] = alpha_2_corrected * in[0]->data[i] + (1-alpha_2_corrected) * in[1]->data[i];
+						break;
+					}
+						
+					default:
+						break;
+				}
+				continue;
+			}
 			case interp_type::flat:
 			{
 				for (int j = 0; j < 3; ++j)
@@ -261,26 +377,80 @@ static void interpolation_helper(vec4 &A, float alpha_1, float alpha_2, vec4 &B,
 				}
 				continue;
 			}
-			case interp_type::smooth:
-			{
-				data_array[0].data = in[0]->data;
-				data_array[1].data[i] = alpha_1 * in[0]->data[i] + (1-alpha_1) * in[1]->data[i];
-				data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[2]->data[i];
-				continue;
-			}
 			case interp_type::noperspective:
 			{
-				float AB_k = 1.0 / (alpha_1 * A[3] + (1-alpha_1) * B[3]);
-				float AC_k = 1.0 / (alpha_2 * A[3] + (1-alpha_2) * C[3]);
-				float AB_tnop = alpha_1 * A[3] * AB_k;
-				float AC_tnop = alpha_2 * A[3] * AC_k;
-				
-				data_array[0].data = in[0]->data;
-				data_array[1].data[i] = AB_tnop * in[0]->data[i] + (1-AB_tnop) * in[1]->data[i];
-				data_array[2].data[i] = AC_tnop * in[0]->data[i] + (1-AC_tnop) * in[2]->data[i];
+				//std::cout<<"n"<<std::endl;
+				switch (tri_case) {
+					case 1:
+					{
+						data_array[0].data = in[0]->data;
+						data_array[1].data[i] = alpha_1 * in[0]->data[i] + (1-alpha_1) * in[1]->data[i];
+						data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[2]->data[i];
+						break;
+					}
+					case 2:
+					{
+						data_array[0].data = in[01]->data;
+						data_array[1].data[i] = alpha_1 * in[1]->data[i] + (1-alpha_1) * in[2]->data[i];
+						data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[1]->data[i];
+						break;
+					}
+					case 3:
+					{
+						data_array[0].data = in[2]->data;
+						data_array[1].data[i] = alpha_1 * in[2]->data[i] + (1-alpha_1) * in[0]->data[i];
+						data_array[2].data[i] = alpha_2 * in[2]->data[i] + (1-alpha_2) * in[1]->data[i];
+						break;
+					}
+					case 4:
+					{
+						data_array[0].data = in[0]->data;
+						data_array[1].data = in[1]->data;
+						data_array[2].data[i] = alpha_2 * in[1]->data[i] + (1-alpha_2) * in[2]->data[i];
+						break;
+					}
+					case 5:
+					{
+						data_array[0].data = in[0]->data;
+						data_array[1].data[i] = alpha_1 * in[1]->data[i] + (1-alpha_1) * in[2]->data[i];
+						data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[2]->data[i];
+						break;
+					}
+					case 6:
+					{
+						data_array[0].data = in[2]->data;
+						data_array[1].data = in[0]->data;
+						data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[1]->data[i];
+						break;
+					}
+					case 7:
+					{
+						data_array[0].data = in[2]->data;
+						data_array[1].data[i] = alpha_1 * in[0]->data[i] + (1-alpha_1) * in[1]->data[i];
+						data_array[2].data[i] = alpha_2 * in[1]->data[i] + (1-alpha_2) * in[2]->data[i];
+						break;
+					}
+					case 8:
+					{
+						data_array[0].data = in[1]->data;
+						data_array[1].data = in[2]->data;
+						data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[2]->data[i];
+						break;
+					}
+					case 9:
+					{
+						data_array[0].data = in[1]->data;
+						data_array[1].data[i] = alpha_1 * in[0]->data[i] + (1-alpha_1) * in[2]->data[i];
+						data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[1]->data[i];
+						break;
+					}
+					default:
+						break;
+				}
 				
 				continue;
 			}
+			
 				
 			default:
 				continue;
@@ -326,30 +496,23 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	vec4 B = in[1]->gl_Position;
 	vec4 C = in[2]->gl_Position;
 	
-	std::cout<<"New clip face: "<<face<<std::endl;
+	//std::cout<<"New clip face: "<<face<<std::endl;
 	
 	const data_geometry * in2[3];
 	
-	int inside_points[3] = {0,0,0};
+	int inside_points[3] = {0,0,0};  // Track A,B,C inside axis. 1 true, 0 false
 	
-	int axis = face % 3;
-	int sign = (face%2==0) ? 1 : -1;
+	int axis = face % 3; //X Y Z
+	int sign = (face%2==0) ? 1 : -1; // Positive or negative sign
 	
 	if (sign == 1)
 	{
 		if (A[axis] < A[3])
-		{
 			inside_points[0] = 1;
-		}
 		if (B[axis] < B[3])
-		{
 			inside_points[1] = 1;
-		}
-		
 		if (C[axis] < C[3])
-		{
 			inside_points[2] = 1;
-		}
 	}
 	else
 	{
@@ -364,25 +527,20 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	for (int i = 0; i < 3; ++i)
 	{
 		//std::cout<< inside_points[i] << " ";
-		std::cout<<in[i]->gl_Position<<std::endl;
+		//std::cout<<in[i]->gl_Position<<std::endl;
 	}//std::cout<<std::endl;
 	
 	
 	
 	//std::cout<<"Clipping face "<<face<<std::endl;
-	if ((!inside_points[0] && !inside_points[1] && !inside_points[2]))
-	{
-		//std::cout<<"Error, no points within clipping axis"<<std::endl;
-		return;
-	}
-	else if (inside_points[0] && inside_points[1] && inside_points[2]) clip_triangle(state, in, face+1);
+	if (!inside_points[0] && !inside_points[1] && !inside_points[2])   return;  //No points inside
+	else if (inside_points[0] && inside_points[1] && inside_points[2]) clip_triangle(state, in, face+1); // All points inside
 	
 	
-	if (inside_points[0] && !inside_points[1] && !inside_points[2])
+	else if (inside_points[0] && !inside_points[1] && !inside_points[2])
 	{
-		std::cout<<"CASE A AB AC"<<std::endl;
-		//A INSIDE   BC OUTSIDE
-		//TRIANGLE   A AB AC
+		//std::cout<<"CASE A AB AC"<<std::endl;
+		//A INSIDE   BC OUTSIDE   A AB AC
 		float AB_t, AC_t;
 		
 		AB_t = midpoint_weight(A, B, axis, sign); // alpha 1
@@ -396,16 +554,15 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = AB;
 		data_array[2].gl_Position = AC;
 		
-		interpolation_helper(A, AB_t, AC_t, B, C, data_array, in, state);
+		interpolation_helper(A, AB_t, AC_t, B, C, data_array, in, state, 1);
 		
 		for (int j = 0; j < 3; ++j)
 			in[j] = &data_array[j];
 		clip_triangle(state, in, face+1);
-		
 	}
-	else if (inside_points[1] && !inside_points[0] && !inside_points[2])
+	else if (!inside_points[0] && inside_points[1] && !inside_points[2])
 	{
-		std::cout<<"CASE A BC AB"<<std::endl;
+		//std::cout<<"CASE A BC AB"<<std::endl;
 		//B INSIDE   AC OUTSIDE   B BC AB
 		float BC_t, AB_t;
 		
@@ -420,7 +577,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = BC;
 		data_array[2].gl_Position = AB;
 		
-		interpolation_helper(A, BC_t, AB_t, B, C, data_array, in, state);
+		interpolation_helper(A, BC_t, AB_t, B, C, data_array, in, state, 2);
 		
 		for (int j = 0; j < 3; ++j)
 			in[j] = &data_array[j];
@@ -428,7 +585,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[2] && !inside_points[0] && !inside_points[1])
 	{
-		std::cout<<"CASE C CA CB"<<std::endl;
+		//std::cout<<"CASE C CA CB"<<std::endl;
 		//C INSIDE   AB OUTSIDE   C CA CB <--
 
 		float CA_t, CB_t;
@@ -444,20 +601,18 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = CA;
 		data_array[2].gl_Position = CB;
 		
-		interpolation_helper(A, CA_t, CB_t, B, C, data_array, in, state);
+		interpolation_helper(A, CA_t, CB_t, B, C, data_array, in, state, 3);
 		
 		for (int j = 0; j < 3; ++j)
 			in[j] = &data_array[j];
 		clip_triangle(state, in, face+1);
 		
 	}
-	
-	
 	//TWO POINTS OUTSIDE
 	
 	else if (inside_points[0] && inside_points[1] && !inside_points[2])
 	{
-		std::cout<<"CASE A B BC (2)"<<std::endl;
+		//std::cout<<"CASE A B BC (2)"<<std::endl;
 		//TRIANGLE               A B BC
 		float BC_t;
 		
@@ -470,14 +625,14 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = B;
 		data_array[2].gl_Position = BC;
 		
-		interpolation_helper(A, 1, BC_t, B, C, data_array, in, state);
+		interpolation_helper(A, 1, BC_t, B, C, data_array, in, state, 4);
 		
 		for (int j = 0; j < 3; ++j)
 			in[j] = &data_array[j];
 		//clip
 		clip_triangle(state, in, face+1);
 		
-		std::cout<<"CASE A BC AC (2)"<<std::endl;
+		//std::cout<<"CASE A BC AC (2)"<<std::endl;
 		//TRIANGLE               A BC AC
 		//A INSIDE   BC OUTSIDE  A AB AC
 		float AC_t;
@@ -490,7 +645,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = BC;
 		data_array[2].gl_Position = AC;
 		
-		interpolation_helper(AC, BC_t, AC_t, B, C, data_array, in, state);
+		interpolation_helper(A, BC_t, AC_t, B, C, data_array, in, state, 5);
 		
 		
 		for (int j = 0; j < 3; ++j)
@@ -500,7 +655,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[0] && inside_points[2] && !inside_points[1])
 	{
-		std::cout<<"CASE C A AB (2)"<<std::endl;
+		//std::cout<<"CASE C A AB (2)"<<std::endl;
 		//AC INSIDE   B OUTSIDE
 		
 		//TRIANGLE    C A AB
@@ -515,11 +670,11 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = A;
 		data_array[2].gl_Position = AB;
 		
-		interpolation_helper(A, 1, AB_t, B, C, data_array, in, state);
+		interpolation_helper(A, 1, AB_t, B, C, data_array, in, state, 6);
 		//clip
 		clip_triangle(state, in, face+1);
 		
-		std::cout<<"CASE C AB BC (2)"<<std::endl;
+		//std::cout<<"CASE C AB BC (2)"<<std::endl;
 		//TRIANGLE    C AB BC
 		float BC_t;
 		
@@ -531,7 +686,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = AB;
 		data_array[2].gl_Position = BC;
 		
-		interpolation_helper(A, AB_t, BC_t, B, C, data_array, in, state);
+		interpolation_helper(A, AB_t, BC_t, B, C, data_array, in, state, 7);
 		
 		for (int j = 0; j < 3; ++j)
 			in2[j] = &data_array[j];
@@ -540,7 +695,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	}
 	else if (inside_points[1] && inside_points[2] && !inside_points[0])
 	{
-		std::cout<<"CASE B C AC (2)"<<std::endl;
+		//std::cout<<"CASE B C AC (2)"<<std::endl;
 		//BC INSIDE   A OUTSIDE
 
 		//TRIANGLE    B C AC
@@ -555,13 +710,13 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = C;
 		data_array[2].gl_Position = AC;
 		
-		interpolation_helper(A, 1, AC_t, B, C, data_array, in, state);
+		interpolation_helper(A, 1, AC_t, B, C, data_array, in, state, 8);
 		for (int j = 0; j < 3; ++j)
 			in[j] = &data_array[j];
 		//clip
 		clip_triangle(state, in, face+1);
 		
-		std::cout<<"CASE B AC AB (2)"<<std::endl;
+		//std::cout<<"CASE B AC AB (2)"<<std::endl;
 		//Triangle    B AC AB
 		float AB_t;
 		
@@ -573,13 +728,15 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		data_array[1].gl_Position = AC;
 		data_array[2].gl_Position = AB;
 		
-		interpolation_helper(A, AC_t, AB_t, B, C, data_array, in, state);
+		interpolation_helper(A, AC_t, AB_t, B, C, data_array, in, state, 9);
 		
 		for (int j = 0; j < 3; ++j)
 			in2[j] = &data_array[j];
 		//clip
 		clip_triangle(state, in2, face+1);
 	}
+	
+	return;
 
 }
 
@@ -643,7 +800,7 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 	
 	float depth = calc_depth(alpha, beta, gamma, in);
 	
-	if(depth <= state.image_depth[i+j*state.image_width])
+	if(depth <= state.image_depth[i+j*state.image_width] && i+j*state.image_width < state.image_width*state.image_height)
 	{
 		state.image_color[i+j*state.image_width] = make_pixel(output.output_color[0], output.output_color[1], output.output_color[2]);
 		state.image_depth[i+j*state.image_width] = depth;

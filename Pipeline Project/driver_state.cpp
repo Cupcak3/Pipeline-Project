@@ -56,8 +56,8 @@ static void translate_to_pixel_space(data_geometry &g, driver_state &state)
 	// 		(x,y) in 2D NDC -------> (i,j) in pixel space
 	// 		i = (w/2)x + (w/2 - .5)
 	// 		j = (h/2)y + (h/2 - .5)
-	g.gl_Position[0] = ((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5);
-	g.gl_Position[1] = ((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5);
+	g.gl_Position[0] = abs(((state.image_width/2)  * g.gl_Position[0]) + ((state.image_width/2)  - .5));
+	g.gl_Position[1] = abs(((state.image_height/2) * g.gl_Position[1]) + ((state.image_height/2) - .5));
 }
 
 // This function will be called to render the data that has been stored in this class.
@@ -102,8 +102,8 @@ void render(driver_state& state, render_type type)
 				
 				//Render each triangle
 				
-				//clip_triangle(state, g_array, 0);
-				
+				clip_triangle(state, g_array, 4);
+				return;
 				
 				g1 = perspective_divide(g1);
 				g2 = perspective_divide(g2);
@@ -298,12 +298,7 @@ void render(driver_state& state, render_type type)
 // simply pass the call on to rasterize_triangle.
 void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 {
-	//{Difference from Positive side, W's become negative. Substitue X,Y,Z. W stays same}
 	// 0 x = 1 right
-		// if Xa < 1 inside
-		// if Xb > 1 outisde
-		// if Xc < 1 inside
-			// alpha = (Wb - Xb) / ((Xa-Wa)+(Wb-Xb))
 	// 1 x = -1 left
 	
 	// 2 y = 1 top
@@ -311,41 +306,472 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 	
 	// 4 z = 1 far
 	// 5 z = -1 near
-		// alpha * Za + (1-alpha) * Zb = (x,y,-w,w)
-		// -(alpha*Za + (1-alpha) * Zb) = w
-		// alpha(Wa+Za) + (1-alpha)(Wb+Ab) = 0
-		// alpha = -1 (Wb*Zb) / (Za-(-Wa))+(-Wb-Zb)) {Difference from Positive side, W's become negative}
+	
+	//Even faces alpha = (Wb - Xb) / (XYZa - Wa + Wb - XYZb)
+	//Odd faces  alpha = -1 (Wb*Zb) / (Za-(-Wa))+(-Wb-Zb)) {Difference from Positive side, W's become negative}
+				    // = (-Wb-XYZb) / (XYZa + Wa - Wb - XYZb)
+	
+	// General formula = ([SIGN] Wb - XYZb) / (XYZa - [SIGN] Wa - [SIGN] Wb - XYZb)
+
 	
 	//DATA IS IN NDC WITH NO PERSPECTIVE DIVIDE
 	
+	float alpha = 0, alpha2 = 0;
+	int sign = (face % 2 == 0) ? 1 : -1;
+	int num_outside = 0;
+	int out[3] = {0,0,0};
+	const data_geometry* g_array[3];
+	
+	data_geometry new_point, new_point2;
+	new_point.data = new float[MAX_FLOATS_PER_VERTEX];
+	new_point2.data = new float[MAX_FLOATS_PER_VERTEX];
+	// Position = alpha * inside + (1-alpha)*outside
+	
 	if (face == 0) // x = 1
 	{
-		
+		//Determine inside outside
+		for (int i = 0; i < 3; ++i)
+		{
+			if (in[i]->gl_Position[0] > 1)
+			{
+				//outside
+				++num_outside;
+			}
+		}
+		if (num_outside == 0)
+		{
+			clip_triangle(state, in, face+1);
+		}
+		else if  (num_outside == 1)
+		{
+			
+		}
+		else if (num_outside == 2)
+		{
+			// Get two points outside
+			// Get alpha for each segment crossing axis
+			// Get point at alpha
+			// Create new triangle with vertices replaced with respective alpha points
+			// Clip triangle
+		}
+		else return;
 	}
 	else if (face == 1) // x = -1
 	{
-		
+		//Determine inside outside
+		for (int i = 0; i < 3; ++i)
+		{
+			if (in[i]->gl_Position[0] < -1)
+			{
+				//outside
+				++num_outside;
+			}
+		}
+		if (num_outside == 0)
+		{
+			clip_triangle(state, in, face+1);
+		}
+		else if  (num_outside == 1)
+		{
+			
+		}
+		else if (num_outside == 2)
+		{
+			// Get two points outside
+			// Get alpha for each segment crossing axis
+			// Get point at alpha
+			// Create new triangle with vertices replaced with respective alpha points
+			// Clip triangle
+		}
+		else return;
 	}
 	else if (face == 2) // y = 1
 	{
-	
+		//Determine inside outside
+		for (int i = 0; i < 3; ++i)
+		{
+			if (in[i]->gl_Position[1] > 1)
+			{
+				//outside
+				++num_outside;
+			}
+		}
+		if (num_outside == 0)
+		{
+			clip_triangle(state, in, face+1);
+		}
+		else if  (num_outside == 1)
+		{
+			
+		}
+		else if (num_outside == 2)
+		{
+			// Get two points outside
+			// Get alpha for each segment crossing axis
+			// Get point at alpha
+			// Create new triangle with vertices replaced with respective alpha points
+			// Clip triangle
+		}
+		else return;
 	}
 	else if (face == 3) // y = -1
 	{
-	
+		//Determine inside outside
+		for (int i = 0; i < 3; ++i)
+		{
+			if (in[i]->gl_Position[1] < -1)
+			{
+				//outside
+				++num_outside;
+			}
+		}
+		if (num_outside == 0)
+		{
+			clip_triangle(state, in, face+1);
+		}
+		else if  (num_outside == 1)
+		{
+			
+		}
+		else if (num_outside == 2)
+		{
+			// Get two points outside
+			// Get alpha for each segment crossing axis
+			// Get point at alpha
+			// Create new triangle with vertices replaced with respective alpha points
+			// Clip triangle
+		}
+		else return;
 	}
 	else if (face == 4) // z = 1
 	{
-		
+		std::cout<<"Clipping near face"<<std::endl;
+		//Determine inside outside
+		for (int i = 0; i < 3; ++i)
+		{
+			if (in[i]->gl_Position[2] > 1)
+			{
+				//outside
+				out[i] = 1;
+				++num_outside;
+			}else g_array[i] = in[i];
+		}
+		if (num_outside == 0)
+		{
+			clip_triangle(state, in, face+1);
+		}
+		else if  (num_outside == 1)
+		{
+			data_geometry outside;
+			// Get point outside
+			for (int i = 0; i < 3; ++i)
+			{
+				if (out[i])
+				{
+					outside.gl_Position = in[i]->gl_Position;
+					outside.data = in[i]->data;
+					// Get alpha for each segment crossing axis
+					// a inside, b outside
+					for (int j = 0; j < 3; ++j)
+					{
+						data_geometry inside;
+						if (!out[j])
+						{
+							inside = *in[j];
+							// General formula = ([SIGN] Wb - XYZb) / (XYZa - [SIGN] Wa - [SIGN] Wb - XYZb)
+							alpha = (sign * outside.gl_Position[3] - outside.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*outside.gl_Position[3] - outside.gl_Position[2]);
+						
+							// Get point at each alpha
+							new_point.gl_Position = alpha * inside.gl_Position + (1-alpha) * outside.gl_Position;
+							
+							// Get data as well
+							for (int b = 0; b < state.floats_per_vertex; ++b)
+							{
+								switch (state.interp_rules[b])
+								{
+									case interp_type::flat:
+									{
+										new_point.data[b] = outside.data[b];
+										break;
+									}
+									case interp_type::noperspective:
+									{
+										new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*outside.gl_Position[3]);
+										break;
+									}
+									case interp_type::smooth:
+									{
+										new_point.data[b] = alpha * inside.data[b] + (1-alpha) * outside.data[b];
+										break;
+									}
+									default:
+										break;
+								}
+							}
+							// Create new triangle with vertices replaced with respective alpha points
+							for (int k = 0; k < 3; ++k)
+							{
+								if (!out[k])
+								{
+									g_array[k] = in[k];
+								}
+								else g_array[k] = &new_point;
+							}
+							// Clip triangle
+							clip_triangle(state, g_array, face+1);
+						}
+					}
+				}
+			}
+		}
+		else if (num_outside == 2)
+		{
+			// Get two points outside
+			data_geometry out1, out2;
+			for (int i = 0; i < 3; ++i)
+			{
+				if (out[i])
+				{
+					out1 = *in[i];
+					for (int j = i; j < 3; ++j)
+					{
+						if (out[j])
+						{
+							out2 = *in[j];
+							goto got_points;
+						}
+					}
+				}
+			}
+		got_points:
+			data_geometry inside;
+			for (int i = 0; i < 3; ++i)
+			{
+				if(!out[i])
+				{
+					inside = *in[i];
+					break;
+				}
+			}
+			
+			alpha  = (sign*out1.gl_Position[3] - out1.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out1.gl_Position[3] - inside.gl_Position[2]);
+			alpha2 = (sign*out2.gl_Position[3] - out2.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out2.gl_Position[3] - inside.gl_Position[2]);
+			
+			new_point.gl_Position  = alpha*inside.gl_Position + (1-alpha)*out1.gl_Position;
+			new_point2.gl_Position = alpha*inside.gl_Position + (1-alpha)*out2.gl_Position;
+			
+			// Get data as well
+			for (int b = 0; b < state.floats_per_vertex; ++b)
+			{
+				switch (state.interp_rules[b])
+				{
+					case interp_type::flat:
+					{
+						new_point.data[b] = out1.data[b];
+						new_point2.data[b] = out2.data[b];
+						break;
+					}
+					case interp_type::noperspective:
+					{
+						new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out1.gl_Position[3]);
+						new_point2.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out2.gl_Position[3]);
+						break;
+					}
+					case interp_type::smooth:
+					{
+						new_point.data[b] = alpha * inside.data[b] + (1-alpha) * out1.data[b];
+						new_point2.data[b] = alpha * inside.data[b] + (1-alpha) * out2.data[b];
+						break;
+					}
+					default:
+						break;
+				}
+			}
+			for (int i = 0; i < 3; ++i)
+			{
+				if (out[i])
+				{
+					g_array[i] = &out1;
+					for (int j = i+1; j < 3; ++j)
+					{
+						if (out[j])
+						{
+							g_array[j] = &out2;
+							goto clip_tri;
+						}
+					}
+				}
+			}
+		clip_tri:
+			clip_triangle(state, g_array, face+1);
+		}
+		else return;
 	}
 	else if (face == 5) // z = -1
 	{
-		
+		std::cout<<"Clipping far face"<<std::endl;
+		//Determine inside outside
+		for (int i = 0; i < 3; ++i)
+		{
+			if (in[i]->gl_Position[2] < -1)
+			{
+				//outside
+				out[i] = 1;
+				++num_outside;
+			}
+		}
+		if (num_outside == 0)
+		{
+			clip_triangle(state, in, face+1);
+		}
+		else if  (num_outside == 1)
+		{
+			data_geometry outside;
+			// Get point outside
+			for (int i = 0; i < 3; ++i)
+			{
+				if (out[i])
+				{
+					outside = *in[i];
+					// Get alpha for each segment crossing axis
+					// a inside, b outside
+					for (int j = 0; j < 3; ++j)
+					{
+						data_geometry inside;
+						if (!out[j])
+						{
+							inside = *in[j];
+							// General formula = ([SIGN] Wb - XYZb) / (XYZa - [SIGN] Wa - [SIGN] Wb - XYZb)
+							alpha = (sign * outside.gl_Position[3] - outside.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*outside.gl_Position[3] - outside.gl_Position[2]);
+							
+							// Get point at each alpha
+							new_point.gl_Position = alpha * inside.gl_Position + (1-alpha) * outside.gl_Position;
+							
+							// Get data as well
+							for (int b = 0; b < state.floats_per_vertex; ++b)
+							{
+								switch (state.interp_rules[b])
+								{
+									case interp_type::flat:
+									{
+										new_point.data[b] = outside.data[b];
+										break;
+									}
+									case interp_type::noperspective:
+									{
+										new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*outside.gl_Position[3]);
+										break;
+									}
+									case interp_type::smooth:
+									{
+										new_point.data[b] = alpha * inside.data[b] + (1-alpha) * outside.data[b];
+										break;
+									}
+									default:
+										break;
+								}
+							}
+							// Create new triangle with vertices replaced with respective alpha points
+							for (int k = 0; k < 3; ++k)
+							{
+								if (!out[k])
+								{
+									g_array[k] = in[k];
+								}
+								else g_array[k] = &new_point;
+							}
+							// Clip triangle
+							clip_triangle(state, g_array, face+1);
+						}
+					}
+				}
+			}
+		}
+		else if (num_outside == 2)
+		{
+			// Get two points outside
+			data_geometry out1, out2;
+			for (int i = 0; i < 3; ++i)
+			{
+				if (out[i])
+				{
+					out1 = *in[i];
+					for (int j = i; j < 3; ++j)
+					{
+						if (out[j])
+						{
+							out2 = *in[j];
+							goto got_points_z2;
+						}
+					}
+				}
+			}
+		got_points_z2:
+			data_geometry inside;
+			for (int i = 0; i < 3; ++i)
+			{
+				if(!out[i])
+				{
+					inside = *in[i];
+					break;
+				}
+			}
+			
+			alpha  = (sign*out1.gl_Position[3] - out1.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out1.gl_Position[3] - inside.gl_Position[2]);
+			alpha2 = (sign*out2.gl_Position[3] - out2.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out2.gl_Position[3] - inside.gl_Position[2]);
+			
+			new_point.gl_Position  = alpha*inside.gl_Position + (1-alpha)*out1.gl_Position;
+			new_point2.gl_Position = alpha*inside.gl_Position + (1-alpha)*out2.gl_Position;
+			
+			// Get data as well
+			for (int b = 0; b < state.floats_per_vertex; ++b)
+			{
+				switch (state.interp_rules[b])
+				{
+					case interp_type::flat:
+					{
+						new_point.data[b] = out1.data[b];
+						new_point2.data[b] = out2.data[b];
+						break;
+					}
+					case interp_type::noperspective:
+					{
+						new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out1.gl_Position[3]);
+						new_point2.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out2.gl_Position[3]);
+						break;
+					}
+					case interp_type::smooth:
+					{
+						new_point.data[b] = alpha * inside.data[b] + (1-alpha) * out1.data[b];
+						new_point2.data[b] = alpha * inside.data[b] + (1-alpha) * out2.data[b];
+						break;
+					}
+					default:
+						break;
+				}
+			}
+			for (int i = 0; i < 3; ++i)
+			{
+				if (out[i])
+				{
+					g_array[i] = &out1;
+					for (int j = i+1; j < 3; ++j)
+					{
+						if (out[j])
+						{
+							g_array[j] = &out2;
+							goto clip_tri_z2;
+						}
+					}
+				}
+			}
+		clip_tri_z2:
+			clip_triangle(state, g_array, face+1);
+		}
+		else return;
 	}
 	else if (face == 6)
     {
-		//return;
-		
 		const data_geometry *tri[3];
 		
 		data_geometry g_a = perspective_divide(*in[0]);
@@ -355,6 +781,10 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		tri[0] = &g_a;
 		tri[1] = &g_b;
 		tri[2] = &g_c;
+		
+		translate_to_pixel_space(g_a, state);
+		translate_to_pixel_space(g_b, state);
+		translate_to_pixel_space(g_c, state);
 		
 		rasterize_triangle(state, tri);
         return;
@@ -385,6 +815,7 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 	{
 		for (int b = 0; b < state.floats_per_vertex; ++b)
 		{
+			// Pixel Fragment coloring rules
 			switch (state.interp_rules[a*state.floats_per_vertex+b])
 			{
 				case interp_type::noperspective:
@@ -403,9 +834,11 @@ static void shade_pixel(int i, int j, const data_geometry **in, driver_state &st
 					//beta  = beta'  / (Wb*k);
 					//gamma = gamma' / (Wc*k);
 					float k = (alpha / in[0]->gl_Position[3]) + (beta / in[1]->gl_Position[3]) + (gamma / in[2]->gl_Position[3]);
-					alpha = (alpha / (in[0]->gl_Position[3]))/k;
-					beta  = (beta  / (in[1]->gl_Position[3]))/k;
-					gamma = (gamma / (in[2]->gl_Position[3]))/k;
+					float alpha_corrected = (alpha / (in[0]->gl_Position[3] * k));
+					float beta_corrected  = (beta  / (in[1]->gl_Position[3] * k));
+					float gamma_corrected = (gamma / (in[2]->gl_Position[3] * k));
+					frag_data[b] = alpha_corrected * in[0]->data[b] + beta_corrected * in[1]->data[b] + gamma_corrected * in[2]->data[b];
+					continue;
 				}
 				default:
 					continue;
@@ -468,31 +901,10 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	
 	float alpha = -1, beta = -1, gamma = -1;
 	
-	// Attempted optimizations
-	/*
-	float a_k0 = calc_area(0, 0, Bx, By, Cx, Cy);
-	float a_k1 = calc_area(1, 0, Bx, By, Cx, Cy) - a_k0;
-	float a_k2 = calc_area(0, 1, Bx, By, Cx, Cy) - a_k0;
-	
-	float b_k0 = calc_area(Ax, Ay, 0, 0, Cx, Cy);
-	float b_k1 = calc_area(Ax, Ay, 1, 0, Cx, Cy) - b_k0;
-	float b_k2 = calc_area(Ax, Ay, 0, 1, Cx, Cy) - b_k0;
-	
-	float g_k0 = calc_area(Ax, Ay, Bx, By, 0, 0);
-	float g_k1 = calc_area(Ax, Ay, Bx, By, 1, 0) - g_k0;
-	float g_k2 = calc_area(Ax, Ay, Bx, By, 0, 1) - g_k0;
-	
-	alpha = a_k0 + a_k1*minX + a_k2*minY;
-	beta  = b_k0 + b_k1*minX + b_k2*minY;
-	gamma = g_k0 + g_k1*minX + g_k2*minY;
-	*/
-
-	
 	for (int j = minY; j <= maxY; ++j)
 	{
 		for (int i = minX; i <= maxX; ++i)
 		{
-			// Unoptimized
 			float tri_A = calc_area(i, j, Bx, By, Cx, Cy);
 			float tri_B = calc_area(Ax, Ay, i, j, Cx, Cy);
 			float tri_C = calc_area(Ax, Ay, Bx, By, i, j);
@@ -510,4 +922,3 @@ void rasterize_triangle(driver_state& state, const data_geometry* in[3])
 	
     //std::cout<<"TODO: implement rasterization"<<std::endl;
 }
-

@@ -159,9 +159,7 @@ void render(driver_state& state, render_type type)
 
 			g_array[0] = &base;
 
-			base = perspective_divide(base);
-
-			translate_to_pixel_space(base, state);
+			//translate_to_pixel_space(base, state);
 
 			for (int i = state.floats_per_vertex; i < state.num_vertices*state.floats_per_vertex-state.floats_per_vertex; i+=state.floats_per_vertex)
 			{
@@ -323,7 +321,7 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		std::cout<<"Rasterizing triangles with coordinates:\n";
 		for (int i = 0; i < 3; ++i)
 		{
-			std::cout<<"("<<in[i]->gl_Position<<")"<<std::endl;
+			std::cout<<"("<<tri[i]->gl_Position<<")"<<std::endl;
 		}
 		rasterize_triangle(state, tri);
 		return;

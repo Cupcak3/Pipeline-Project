@@ -28,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		702A854222370DAF008EE32C /* output.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = output.png; sourceTree = "<group>"; };
+		702A854322370DB0008EE32C /* diff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diff.png; sourceTree = "<group>"; };
 		70956BDC221228C500960036 /* Pipeline Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Pipeline Project"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70956BDF221228C500960036 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		70956BE62212296100960036 /* 18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 18.png; sourceTree = "<group>"; };
@@ -96,7 +98,6 @@
 		70956C252212296A00960036 /* grading-scheme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "grading-scheme.txt"; sourceTree = "<group>"; };
 		70956C262212296A00960036 /* 00.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 00.txt; sourceTree = "<group>"; };
 		70956C2C22122A0D00960036 /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng15.framework; path = ../../../../../../../Library/Frameworks/libpng15.framework; sourceTree = "<group>"; };
-		70ECAE1B221275DB007550F3 /* output.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = output.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,10 +132,11 @@
 		70956BDE221228C500960036 /* Pipeline Project */ = {
 			isa = PBXGroup;
 			children = (
+				702A854322370DB0008EE32C /* diff.png */,
+				702A854222370DAF008EE32C /* output.png */,
 				70ECAE1922126728007550F3 /* source */,
 				70ECAE1A22126733007550F3 /* headers */,
 				70956C3222122BD000960036 /* inputs */,
-				70ECAE1B221275DB007550F3 /* output.png */,
 				70956C3122122BAD00960036 /* outputs */,
 				70956BF62212296200960036 /* SConstruct */,
 				70956BE72212296100960036 /* grading-script.py */,

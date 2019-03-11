@@ -293,9 +293,9 @@ static void interpolation_helper(vec4 &point_1, float alpha_1, float alpha_2, ve
 							float alpha_1_corrected = alpha_1 * point_3[3] * k_1;
 							float alpha_2_corrected = alpha_2 * point_3[3] * k_2;
 							
-							data_array[0].data[i] = in[2]->data[i];
-							data_array[1].data[i] = alpha_1_corrected * in[2]->data[i] + (1-alpha_1_corrected) * in[0]->data[i];
-							data_array[2].data[i] = alpha_2_corrected * in[2]->data[i] + (1-alpha_2_corrected) * in[1]->data[i];
+							data_array[0].data[i] = in[0]->data[i];
+							data_array[1].data[i] = alpha_1_corrected * in[3]->data[i] + (1-alpha_1_corrected) * in[0]->data[i];
+							data_array[2].data[i] = alpha_2_corrected * in[3]->data[i] + (1-alpha_2_corrected) * in[1]->data[i];
 							continue;
 						}
 						case 4:
@@ -358,7 +358,6 @@ static void interpolation_helper(vec4 &point_1, float alpha_1, float alpha_2, ve
 							float k_2 = 1.0 / (alpha_2 * point_1[3] + (1-alpha_2) * point_2[3]);
 							float alpha_1_corrected = alpha_1 * point_1[3] * k_1;
 							float alpha_2_corrected = alpha_2 * point_1[3] * k_2;
-							
 							
 							data_array[0].data[i] = in[1]->data[i];
 							data_array[1].data[i] = alpha_1_corrected * in[0]->data[i] + (1-alpha_1_corrected) * in[2]->data[i];

@@ -151,6 +151,35 @@
 			<key>uniqueIdentifier</key>
 			<string>0EB7A11E-10CF-4133-953D-C294606CDE90</string>
 		</dict>
+		<key>10A988A0-2361-46EF-A280-7B03118A3360</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>10A988A0-2361-46EF-A280-7B03118A3360.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574035787.84430897</real>
+			<key>timeStoppedRecording</key>
+			<real>574035789.26899195</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>10A988A0-2361-46EF-A280-7B03118A3360</string>
+		</dict>
 		<key>14FD78D1-5641-42AE-97F9-A5993D14B522</key>
 		<dict>
 			<key>className</key>
@@ -208,6 +237,35 @@
 			<string>Debug Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>16D2B5E4-F146-4E20-9821-4B0EE007E1A5</string>
+		</dict>
+		<key>19CB8D32-7596-415E-9609-2C82302AD8C5</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>19CB8D32-7596-415E-9609-2C82302AD8C5.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574032540.59000897</real>
+			<key>timeStoppedRecording</key>
+			<real>574032541.90382195</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>19CB8D32-7596-415E-9609-2C82302AD8C5</string>
 		</dict>
 		<key>1CDA58A8-D188-4D7B-8ABC-1AA4372A60AA</key>
 		<dict>
@@ -412,6 +470,35 @@
 			<key>uniqueIdentifier</key>
 			<string>2AF906BD-6B79-4F46-87E9-973A7C0F4B5A</string>
 		</dict>
+		<key>2BD7BB1A-E858-4291-9060-6CCFEE18B7E0</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>2BD7BB1A-E858-4291-9060-6CCFEE18B7E0.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574032609.82872403</real>
+			<key>timeStoppedRecording</key>
+			<real>574032611.37088501</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>2BD7BB1A-E858-4291-9060-6CCFEE18B7E0</string>
+		</dict>
 		<key>2BE28CBE-C5A3-4935-A7D4-5CB77FB3E491</key>
 		<dict>
 			<key>className</key>
@@ -440,6 +527,35 @@
 			<string>Debug Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>2BE28CBE-C5A3-4935-A7D4-5CB77FB3E491</string>
+		</dict>
+		<key>37A07B5D-745D-4303-A061-110E80F174D6</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>37A07B5D-745D-4303-A061-110E80F174D6.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574033303.92289805</real>
+			<key>timeStoppedRecording</key>
+			<real>574033305.24926305</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>37A07B5D-745D-4303-A061-110E80F174D6</string>
 		</dict>
 		<key>3818B568-7CC6-4ED1-BC10-E260AF1D221E</key>
 		<dict>
@@ -527,6 +643,35 @@
 			<string>Debug Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>3A32C8E3-8EB7-469E-BACA-D4F574531FC6</string>
+		</dict>
+		<key>3F41474A-2FF8-40DB-8B56-1E4B0420FDCF</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>3F41474A-2FF8-40DB-8B56-1E4B0420FDCF.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574035619.93900502</real>
+			<key>timeStoppedRecording</key>
+			<real>574035621.339661</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>3F41474A-2FF8-40DB-8B56-1E4B0420FDCF</string>
 		</dict>
 		<key>3F85958F-8B3D-4801-B69C-EE314842079A</key>
 		<dict>
@@ -1195,6 +1340,35 @@
 			<key>uniqueIdentifier</key>
 			<string>9513A014-498B-492B-A86C-3E7B558871AC</string>
 		</dict>
+		<key>96CB588C-E8B9-4014-9E40-BAD7E0320A8A</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>96CB588C-E8B9-4014-9E40-BAD7E0320A8A.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574035866.44092703</real>
+			<key>timeStoppedRecording</key>
+			<real>574035868.09559703</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>96CB588C-E8B9-4014-9E40-BAD7E0320A8A</string>
+		</dict>
 		<key>9AD3FAC7-EBC2-4FB6-8F43-CD3783BCCACD</key>
 		<dict>
 			<key>className</key>
@@ -1281,6 +1455,35 @@
 			<string>Debug Pipeline Project</string>
 			<key>uniqueIdentifier</key>
 			<string>A05AA3FE-1E8B-456B-B502-02270789FB02</string>
+		</dict>
+		<key>A5758A6D-7497-49EF-A3AF-C77B49BC6A26</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>A5758A6D-7497-49EF-A3AF-C77B49BC6A26.xcactivitylog</string>
+			<key>highLevelStatus</key>
+			<string>S</string>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pipeline Project project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pipeline Project</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pipeline Project</string>
+			<key>timeStartedRecording</key>
+			<real>574033288.70326304</real>
+			<key>timeStoppedRecording</key>
+			<real>574033290.26335394</real>
+			<key>title</key>
+			<string>Debug Pipeline Project</string>
+			<key>uniqueIdentifier</key>
+			<string>A5758A6D-7497-49EF-A3AF-C77B49BC6A26</string>
 		</dict>
 		<key>A74FA291-FA5F-47FD-B3D6-A85CB3AD0763</key>
 		<dict>

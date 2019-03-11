@@ -244,484 +244,68 @@ void render(driver_state& state, render_type type)
 }
 
 
+static void interpolation_helper(vec4 &A, float alpha_1, float alpha_2, vec4 &B, vec4 &C, data_geometry *data_array, const data_geometry **in, driver_state &state) {
+	for (int i = 0; i < 3; ++i)
+	{
+		data_array[i].data = new float[MAX_FLOATS_PER_VERTEX];
+	}
+	
+	for (int i = 0; i < state.floats_per_vertex-1; ++i)
+	{
+		switch (state.interp_rules[i])
+		{
+			case interp_type::flat:
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					data_array[j].data = in[0]->data;
+				}
+				continue;
+			}
+			case interp_type::smooth:
+			{
+				data_array[0].data = in[0]->data;
+				data_array[1].data[i] = alpha_1 * in[0]->data[i] + (1-alpha_1) * in[1]->data[i];
+				data_array[2].data[i] = alpha_2 * in[0]->data[i] + (1-alpha_2) * in[2]->data[i];
+				continue;
+			}
+			case interp_type::noperspective:
+			{
+				float AB_k = 1.0 / (alpha_1 * A[3] + (1-alpha_1) * B[3]);
+				float AC_k = 1.0 / (alpha_2 * A[3] + (1-alpha_2) * C[3]);
+				float AB_tnop = alpha_1 * A[3] * AB_k;
+				float AC_tnop = alpha_2 * A[3] * AC_k;
+				
+				data_array[0].data = in[0]->data;
+				data_array[1].data[i] = AB_tnop * in[0]->data[i] + (1-AB_tnop) * in[1]->data[i];
+				data_array[2].data[i] = AC_tnop * in[0]->data[i] + (1-AC_tnop) * in[2]->data[i];
+				
+				continue;
+			}
+				
+			default:
+				continue;
+		}
+	}
+}
+
+static float midpoint_weight(vec4 &A, vec4 &B, int axis, int sign) {
+	return (sign*B[3] - B[axis]) / (A[axis] - sign*A[3] + sign*B[3] - B[axis]);
+}
+
+static vec<float, 4> midpoint(const vec4 &first, float midpoint_weight, const vec4 &last) {
+	return midpoint_weight * first + (1-midpoint_weight) * last;
+}
+
 // This function clips a triangle (defined by the three vertices in the "in" array).
 // It will be called recursively, once for each clipping face (face=0, 1, ..., 5) to
 // clip against each of the clipping faces in turn.  When face=6, clip_triangle should
 // simply pass the call on to rasterize_triangle.
 void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 {
-	// 0 x = 1 right
-	// 1 x = -1 left
-	
-	// 2 y = 1 top
-	// 3 y = -1 bottom
-	
-	// 4 z = 1 far
-	// 5 z = -1 near
-	
-	//Even faces alpha = (Wb - Xb) / (XYZa - Wa + Wb - XYZb)
-	//Odd faces  alpha = -1 (Wb*Zb) / (Za-(-Wa))+(-Wb-Zb)) {Difference from Positive side, W's become negative}
-				    // = (-Wb-XYZb) / (XYZa + Wa - Wb - XYZb)
-	
-	// General formula = ([SIGN] Wb - XYZb) / (XYZa - [SIGN] Wa - [SIGN] Wb - XYZb)
-
-	
-	//DATA IS IN NDC WITH NO PERSPECTIVE DIVIDE
-	
-	float alpha = 0, alpha2 = 0;
-	int sign = (face % 2 == 0) ? 1 : -1;
-	int num_outside = 0;
-	int out[3] = {0,0,0};
-	const data_geometry* g_array[3];
-	
-	data_geometry new_point, new_point2;
-	new_point.data = new float[MAX_FLOATS_PER_VERTEX];
-	new_point2.data = new float[MAX_FLOATS_PER_VERTEX];
-	// Position = alpha * inside + (1-alpha)*outside
-	
-	if (face == 0) // x = 1
+	if (face > 6) return;
+	if (face == 6)
 	{
-		//Determine inside outside
-		for (int i = 0; i < 3; ++i)
-		{
-			if (in[i]->gl_Position[0] > 1)
-			{
-				//outside
-				++num_outside;
-			}
-		}
-		if (num_outside == 0)
-		{
-			clip_triangle(state, in, face+1);
-		}
-		else if  (num_outside == 1)
-		{
-			
-		}
-		else if (num_outside == 2)
-		{
-			// Get two points outside
-			// Get alpha for each segment crossing axis
-			// Get point at alpha
-			// Create new triangle with vertices replaced with respective alpha points
-			// Clip triangle
-		}
-		else return;
-	}
-	else if (face == 1) // x = -1
-	{
-		//Determine inside outside
-		for (int i = 0; i < 3; ++i)
-		{
-			if (in[i]->gl_Position[0] < -1)
-			{
-				//outside
-				++num_outside;
-			}
-		}
-		if (num_outside == 0)
-		{
-			clip_triangle(state, in, face+1);
-		}
-		else if  (num_outside == 1)
-		{
-			
-		}
-		else if (num_outside == 2)
-		{
-			// Get two points outside
-			// Get alpha for each segment crossing axis
-			// Get point at alpha
-			// Create new triangle with vertices replaced with respective alpha points
-			// Clip triangle
-		}
-		else return;
-	}
-	else if (face == 2) // y = 1
-	{
-		//Determine inside outside
-		for (int i = 0; i < 3; ++i)
-		{
-			if (in[i]->gl_Position[1] > 1)
-			{
-				//outside
-				++num_outside;
-			}
-		}
-		if (num_outside == 0)
-		{
-			clip_triangle(state, in, face+1);
-		}
-		else if  (num_outside == 1)
-		{
-			
-		}
-		else if (num_outside == 2)
-		{
-			// Get two points outside
-			// Get alpha for each segment crossing axis
-			// Get point at alpha
-			// Create new triangle with vertices replaced with respective alpha points
-			// Clip triangle
-		}
-		else return;
-	}
-	else if (face == 3) // y = -1
-	{
-		//Determine inside outside
-		for (int i = 0; i < 3; ++i)
-		{
-			if (in[i]->gl_Position[1] < -1)
-			{
-				//outside
-				++num_outside;
-			}
-		}
-		if (num_outside == 0)
-		{
-			clip_triangle(state, in, face+1);
-		}
-		else if  (num_outside == 1)
-		{
-			
-		}
-		else if (num_outside == 2)
-		{
-			// Get two points outside
-			// Get alpha for each segment crossing axis
-			// Get point at alpha
-			// Create new triangle with vertices replaced with respective alpha points
-			// Clip triangle
-		}
-		else return;
-	}
-	else if (face == 4) // z = 1
-	{
-		//Determine inside outside
-		for (int i = 0; i < 3; ++i)
-		{
-			if (in[i]->gl_Position[2] > 1)
-			{
-				//outside
-				out[i] = 1;
-				++num_outside;
-			}else g_array[i] = in[i];
-		}
-		if (num_outside == 0)
-		{
-			clip_triangle(state, in, face+1);
-		}
-		else if  (num_outside == 1)
-		{
-			data_geometry outside;
-			// Get point outside
-			for (int i = 0; i < 3; ++i)
-			{
-				if (out[i])
-				{
-					outside.gl_Position = in[i]->gl_Position;
-					outside.data = in[i]->data;
-					// Get alpha for each segment crossing axis
-					// a inside, b outside
-					for (int j = 0; j < 3; ++j)
-					{
-						data_geometry inside;
-						if (!out[j])
-						{
-							inside = *in[j];
-							// General formula = ([SIGN] Wb - XYZb) / (XYZa - [SIGN] Wa - [SIGN] Wb - XYZb)
-							alpha = (sign * outside.gl_Position[3] - outside.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*outside.gl_Position[3] - outside.gl_Position[2]);
-						
-							// Get point at each alpha
-							new_point.gl_Position = alpha * inside.gl_Position + (1-alpha) * outside.gl_Position;
-							
-							// Get data as well
-							for (int b = 0; b < state.floats_per_vertex; ++b)
-							{
-								switch (state.interp_rules[b])
-								{
-									case interp_type::flat:
-									{
-										new_point.data[b] = outside.data[b];
-										break;
-									}
-									case interp_type::noperspective:
-									{
-										new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*outside.gl_Position[3]);
-										break;
-									}
-									case interp_type::smooth:
-									{
-										new_point.data[b] = alpha * inside.data[b] + (1-alpha) * outside.data[b];
-										break;
-									}
-									default:
-										break;
-								}
-							}
-							// Create new triangle with vertices replaced with respective alpha points
-							for (int k = 0; k < 3; ++k)
-							{
-								if (!out[k])
-								{
-									g_array[k] = in[k];
-								}
-								else g_array[k] = &new_point;
-							}
-							// Clip triangle
-							clip_triangle(state, g_array, face+1);
-						}
-					}
-				}
-			}
-		}
-		else if (num_outside == 2)
-		{
-			// Get two points outside
-			data_geometry out1, out2;
-			for (int i = 0; i < 3; ++i)
-			{
-				if (out[i])
-				{
-					out1 = *in[i];
-					for (int j = i; j < 3; ++j)
-					{
-						if (out[j])
-						{
-							out2 = *in[j];
-							goto got_points;
-						}
-					}
-				}
-			}
-		got_points:
-			data_geometry inside;
-			for (int i = 0; i < 3; ++i)
-			{
-				if(!out[i])
-				{
-					inside = *in[i];
-					break;
-				}
-			}
-			
-			alpha  = (sign*out1.gl_Position[3] - out1.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out1.gl_Position[3] - inside.gl_Position[2]);
-			alpha2 = (sign*out2.gl_Position[3] - out2.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out2.gl_Position[3] - inside.gl_Position[2]);
-			
-			new_point.gl_Position  = alpha*inside.gl_Position + (1-alpha)*out1.gl_Position;
-			new_point2.gl_Position = alpha*inside.gl_Position + (1-alpha)*out2.gl_Position;
-			
-			// Get data as well
-			for (int b = 0; b < state.floats_per_vertex; ++b)
-			{
-				switch (state.interp_rules[b])
-				{
-					case interp_type::flat:
-					{
-						new_point.data[b] = out1.data[b];
-						new_point2.data[b] = out2.data[b];
-						break;
-					}
-					case interp_type::noperspective:
-					{
-						new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out1.gl_Position[3]);
-						new_point2.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out2.gl_Position[3]);
-						break;
-					}
-					case interp_type::smooth:
-					{
-						new_point.data[b] = alpha * inside.data[b] + (1-alpha) * out1.data[b];
-						new_point2.data[b] = alpha * inside.data[b] + (1-alpha) * out2.data[b];
-						break;
-					}
-					default:
-						break;
-				}
-			}
-			for (int i = 0; i < 3; ++i)
-			{
-				if (out[i])
-				{
-					g_array[i] = &out1;
-					for (int j = i+1; j < 3; ++j)
-					{
-						if (out[j])
-						{
-							g_array[j] = &out2;
-							goto clip_tri;
-						}
-					}
-				}
-			}
-		clip_tri:
-			clip_triangle(state, g_array, face+1);
-		}
-		else return;
-	}
-	else if (face == 5) // z = -1
-	{
-		//Determine inside outside
-		for (int i = 0; i < 3; ++i)
-		{
-			if (in[i]->gl_Position[2] < -1)
-			{
-				//outside
-				out[i] = 1;
-				++num_outside;
-			}
-		}
-		if (num_outside == 0)
-		{
-			clip_triangle(state, in, face+1);
-		}
-		else if  (num_outside == 1)
-		{
-			data_geometry outside;
-			// Get point outside
-			for (int i = 0; i < 3; ++i)
-			{
-				if (out[i])
-				{
-					outside = *in[i];
-					// Get alpha for each segment crossing axis
-					// a inside, b outside
-					for (int j = 0; j < 3; ++j)
-					{
-						data_geometry inside;
-						if (!out[j])
-						{
-							inside = *in[j];
-							// General formula = ([SIGN] Wb - XYZb) / (XYZa - [SIGN] Wa - [SIGN] Wb - XYZb)
-							alpha = (sign * outside.gl_Position[3] - outside.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*outside.gl_Position[3] - outside.gl_Position[2]);
-							
-							// Get point at each alpha
-							new_point.gl_Position = alpha * inside.gl_Position + (1-alpha) * outside.gl_Position;
-							
-							// Get data as well
-							for (int b = 0; b < state.floats_per_vertex; ++b)
-							{
-								switch (state.interp_rules[b])
-								{
-									case interp_type::flat:
-									{
-										new_point.data[b] = outside.data[b];
-										break;
-									}
-									case interp_type::noperspective:
-									{
-										new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*outside.gl_Position[3]);
-										break;
-									}
-									case interp_type::smooth:
-									{
-										new_point.data[b] = alpha * inside.data[b] + (1-alpha) * outside.data[b];
-										break;
-									}
-									default:
-										break;
-								}
-							}
-							// Create new triangle with vertices replaced with respective alpha points
-							for (int k = 0; k < 3; ++k)
-							{
-								if (!out[k])
-								{
-									g_array[k] = in[k];
-								}
-								else g_array[k] = &new_point;
-							}
-							// Clip triangle
-							clip_triangle(state, g_array, face+1);
-						}
-					}
-				}
-			}
-		}
-		else if (num_outside == 2)
-		{
-			// Get two points outside
-			data_geometry out1, out2;
-			for (int i = 0; i < 3; ++i)
-			{
-				if (out[i])
-				{
-					out1 = *in[i];
-					for (int j = i; j < 3; ++j)
-					{
-						if (out[j])
-						{
-							out2 = *in[j];
-							goto got_points_z2;
-						}
-					}
-				}
-			}
-		got_points_z2:
-			data_geometry inside;
-			for (int i = 0; i < 3; ++i)
-			{
-				if(!out[i])
-				{
-					inside = *in[i];
-					break;
-				}
-			}
-			
-			alpha  = (sign*out1.gl_Position[3] - out1.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out1.gl_Position[3] - inside.gl_Position[2]);
-			alpha2 = (sign*out2.gl_Position[3] - out2.gl_Position[2]) / (inside.gl_Position[2] - sign*inside.gl_Position[3] - sign*out2.gl_Position[3] - inside.gl_Position[2]);
-			
-			new_point.gl_Position  = alpha*inside.gl_Position + (1-alpha)*out1.gl_Position;
-			new_point2.gl_Position = alpha*inside.gl_Position + (1-alpha)*out2.gl_Position;
-			
-			// Get data as well
-			for (int b = 0; b < state.floats_per_vertex; ++b)
-			{
-				switch (state.interp_rules[b])
-				{
-					case interp_type::flat:
-					{
-						new_point.data[b] = out1.data[b];
-						new_point2.data[b] = out2.data[b];
-						break;
-					}
-					case interp_type::noperspective:
-					{
-						new_point.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out1.gl_Position[3]);
-						new_point2.data[b] = (alpha * sign*inside.gl_Position[3]) / (alpha * sign*inside.gl_Position[3] + (1-alpha) * sign*out2.gl_Position[3]);
-						break;
-					}
-					case interp_type::smooth:
-					{
-						new_point.data[b] = alpha * inside.data[b] + (1-alpha) * out1.data[b];
-						new_point2.data[b] = alpha * inside.data[b] + (1-alpha) * out2.data[b];
-						break;
-					}
-					default:
-						break;
-				}
-			}
-			for (int i = 0; i < 3; ++i)
-			{
-				if (out[i])
-				{
-					g_array[i] = &out1;
-					for (int j = i+1; j < 3; ++j)
-					{
-						if (out[j])
-						{
-							g_array[j] = &out2;
-							goto clip_tri_z2;
-						}
-					}
-				}
-			}
-		clip_tri_z2:
-			clip_triangle(state, g_array, face+1);
-		}
-		else return;
-	}
-	else if (face == 6)
-    {
 		const data_geometry *tri[3];
 		
 		data_geometry g_a = perspective_divide(*in[0]);
@@ -735,12 +319,272 @@ void clip_triangle(driver_state& state, const data_geometry* in[3], int face)
 		translate_to_pixel_space(g_a, state);
 		translate_to_pixel_space(g_b, state);
 		translate_to_pixel_space(g_c, state);
-		
+		std::cout<<"Rasterizing triangles with coordinates:\n";
+		for (int i = 0; i < 3; ++i)
+		{
+			std::cout<<"("<<in[i]->gl_Position<<")"<<std::endl;
+		}
 		rasterize_triangle(state, tri);
-        return;
-    }
-    //std::cout<<"TODO: implement clipping. (The current code passes the triangle through without clipping them.)"<<std::endl;
-    //clip_triangle(state,in,face+1);
+		return;
+	}
+	vec4 A = in[0]->gl_Position;
+	vec4 B = in[1]->gl_Position;
+	vec4 C = in[2]->gl_Position;
+	
+	const data_geometry * in2[3];
+	
+	int inside_points[3] = {0,0,0};
+	
+	int axis = face % 3;
+	int sign = (face%2==0) ? 1 : -1;
+	
+	if (sign == 1)
+	{
+		if (A[axis] < A[3])
+		{
+			//std::cout<<A[axis] << " < " << A[3] <<std:: endl;
+			inside_points[0] = 1;
+		}
+		if (B[axis] < B[3])
+		{
+			//std::cout<<B[axis] << " < " << B[3] <<std:: endl;
+			inside_points[1] = 1;
+		}
+		
+		if (C[axis] < C[3])
+		{
+			//std::cout<<C[axis] << " < " << C[3] <<std:: endl;
+			inside_points[2] = 1;
+		}
+	}
+	else
+	{
+		if (A[axis] > -A[3])
+			inside_points[0] = 1;
+		if (B[axis] > -B[3])
+			inside_points[1] = 1;
+		if (C[axis] > -C[3])
+			inside_points[2] = 1;
+	}
+	
+	std::cout<<"Clipping face "<<face<<std::endl;
+	if ((!inside_points[0] && !inside_points[1] && !inside_points[2]))
+	{
+		//std::cout<<"Error, no points within clipping axis"<<std::endl;
+		return;
+	}
+	else if (inside_points[0] && inside_points[1] && inside_points[2]) clip_triangle(state, in, face+1);
+	
+	
+	if (inside_points[0] && !(inside_points[1] && inside_points[2]))
+	{
+		std::cout<<"One point outside face " << face <<std::endl;
+		//A INSIDE   BC OUTSIDE
+		//TRIANGLE   A AB AC
+		float AB_t, AC_t;
+		
+		AB_t = midpoint_weight(A, B, axis, sign); // alpha 1
+		AC_t = midpoint_weight(A, C, axis, sign); // alpha 2
+		
+		vec4 AB = midpoint(A, AB_t, B);           // Midpoint with alpha 1
+		vec4 AC = midpoint(A, AC_t, C);           // Midpoint with alpha 2
+		
+		data_geometry * data_array = new data_geometry[3];
+		data_array[0].gl_Position = A;
+		data_array[1].gl_Position = AB;
+		data_array[2].gl_Position = AC;
+		
+		interpolation_helper(A, AB_t, AC_t, B, C, data_array, in, state);
+		
+		for (int j = 0; j < 3; ++j)
+			in[j] = &data_array[j];
+		clip_triangle(state, in, face+1);
+		
+	}
+	else if (inside_points[1] && !(inside_points[0] && inside_points[2]))
+	{
+		std::cout<<"One point outside face " << face<<std::endl;
+		//B INSIDE   AC OUTSIDE   B BC AB  <--
+		//A INSIDE   BC OUTISDE   A AB AC
+		float BC_t, AB_t;
+		
+		BC_t = midpoint_weight(B, C, axis, sign);
+		AB_t = midpoint_weight(A, B, axis, sign);
+		
+		vec4 BC = midpoint(B, BC_t, C);
+		vec4 AB = midpoint(A, AB_t, B);
+		
+		data_geometry * data_array = new data_geometry[3];
+		data_array[0].gl_Position = B;
+		data_array[1].gl_Position = BC;
+		data_array[2].gl_Position = AB;
+		
+		interpolation_helper(A, BC_t, AB_t, B, C, data_array, in, state);
+		
+		for (int j = 0; j < 3; ++j)
+			in[j] = &data_array[j];
+		clip_triangle(state, in, face+1);
+	}
+	else if (inside_points[2] && !(inside_points[0] && inside_points[1]))
+	{
+		std::cout<<"One point outside face " << face<<std::endl;
+		//C INSIDE   AB OUTSIDE   C CA CB <--
+		//A INSIDE   BC OUTISDE   A AB AC
+
+		float CA_t, CB_t;
+		
+		CA_t = midpoint_weight(C, A, axis, sign); // alpha 1
+		CB_t = midpoint_weight(C, B, axis, sign); // alpha 2
+		
+		vec4 CA = midpoint(C, CA_t, A);           // Midpoint with alpha 1
+		vec4 CB = midpoint(C, CB_t, B);           // Midpoint with alpha 2
+		
+		data_geometry * data_array = new data_geometry[3];
+		data_array[0].gl_Position = C;
+		data_array[1].gl_Position = CA;
+		data_array[2].gl_Position = CB;
+		
+		interpolation_helper(A, CA_t, CB_t, B, C, data_array, in, state);
+		
+		for (int j = 0; j < 3; ++j)
+			in[j] = &data_array[j];
+		clip_triangle(state, in, face+1);
+		
+	}
+	
+	
+	
+	
+	else if (inside_points[0] && inside_points[1] && !inside_points[2])
+	{
+		std::cout<<"Two points outside face " << face<<std::endl;
+		//TRIANGLE               A B BC
+		//A INSIDE   BC OUTSIDE  A AB AC
+		float BB_t, BC_t;
+		
+		BB_t = midpoint_weight(B, B, axis, sign); // alpha 1
+		BC_t = midpoint_weight(B, C, axis, sign); // alpha 2
+		
+		vec4 BB = midpoint(B, BB_t, B);           // Midpoint with alpha 1
+		vec4 BC = midpoint(B, BC_t, C);           // Midpoint with alpha 2
+		
+		data_geometry * data_array = new data_geometry[3];
+		data_array[0].gl_Position = A;
+		data_array[1].gl_Position = BB;
+		data_array[2].gl_Position = BC;
+		
+		interpolation_helper(A, BB_t, BC_t, B, C, data_array, in, state);
+		
+		for (int j = 0; j < 3; ++j)
+			in[j] = &data_array[j];
+		//clip
+		clip_triangle(state, in, face+1);
+		
+		//TRIANGLE               A BC AC
+		//A INSIDE   BC OUTSIDE  A AB AC
+		float AC_t;
+		
+		AC_t = midpoint_weight(A, C, axis, sign); // alpha 2
+	
+		vec4 AC = midpoint(A, AC_t, C);           // Midpoint with alpha 2
+		
+		data_array[0].gl_Position = A;
+		data_array[1].gl_Position = BC;
+		data_array[2].gl_Position = AC;
+		
+		interpolation_helper(AC, BC_t, AC_t, B, C, data_array, in, state);
+		
+		
+		for (int j = 0; j < 3; ++j)
+			in2[j] = &data_array[j];
+		//clip
+		clip_triangle(state, in2, face+1);
+	}
+	else if (inside_points[0] && inside_points[2] && !inside_points[1])
+	{
+		std::cout<<"Two points outside face " << face<<std::endl;
+		//AC INSIDE   B OUTSIDE
+		
+		//TRIANGLE    C A AB
+		float AA_t, AB_t;
+		
+		AA_t = midpoint_weight(A, A, axis, sign);
+		AB_t = midpoint_weight(A, B, axis, sign);
+		
+		vec4 AA = midpoint(A, AA_t, A);
+		vec4 AB = midpoint(A, AB_t, B);
+		
+		data_geometry * data_array = new data_geometry[3];
+		data_array[0].gl_Position = C;
+		data_array[1].gl_Position = AA;
+		data_array[2].gl_Position = AB;
+		
+		interpolation_helper(A, AA_t, AB_t, B, C, data_array, in, state);
+		//clip
+		clip_triangle(state, in, face+1);
+		
+		//TRIANGLE    C AB BC
+		float BC_t;
+		
+		BC_t = midpoint_weight(B, C, axis, sign);
+		
+		vec4 BC = midpoint(A, AB_t, B);
+		
+		data_array[0].gl_Position = C;
+		data_array[1].gl_Position = AB;
+		data_array[2].gl_Position = BC;
+		
+		interpolation_helper(A, AB_t, BC_t, B, C, data_array, in, state);
+		
+		for (int j = 0; j < 3; ++j)
+			in2[j] = &data_array[j];
+		//clip
+		clip_triangle(state, in2, face+1);
+	}
+	else if (inside_points[1] && inside_points[2] && !inside_points[0])
+	{
+		std::cout<<"Two points outside face " << face<<std::endl;
+		//BC INSIDE   A OUTSIDE
+		
+		//TRIANGLE    B C AC
+		float CC_t, AC_t;
+		
+		CC_t = midpoint_weight(C, C, axis, sign);
+		AC_t = midpoint_weight(A, C, axis, sign);
+		
+		vec4 CC = midpoint(C, CC_t, C);
+		vec4 AC = midpoint(A, AC_t, C);
+		
+		data_geometry * data_array = new data_geometry[3];
+		data_array[0].gl_Position = B;
+		data_array[1].gl_Position = CC;
+		data_array[2].gl_Position = AC;
+		
+		interpolation_helper(A, CC_t, AC_t, B, C, data_array, in, state);
+		for (int j = 0; j < 3; ++j)
+			in[j] = &data_array[j];
+		//clip
+		clip_triangle(state, in, face+1);
+		
+		//Triangle    B AC AB
+		float AB_t;
+		
+		AB_t = midpoint_weight(A, B, axis, sign);
+		
+		vec4 AB = midpoint(A, AB_t, B);
+		
+		data_array[0].gl_Position = B;
+		data_array[1].gl_Position = AC;
+		data_array[2].gl_Position = AB;
+		
+		interpolation_helper(A, AC_t, AB_t, B, C, data_array, in, state);
+		
+		for (int j = 0; j < 3; ++j)
+			in2[j] = &data_array[j];
+		//clip
+		clip_triangle(state, in2, face+1);
+	}
+
 }
 
 static double calc_area(double Ax, double Ay, double Bx, double By, double Cx, double Cy)
